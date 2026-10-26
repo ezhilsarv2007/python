@@ -1,0 +1,34 @@
+$ python task06_functions.py
+=== functions, parameters, return values ===
+rate_per_litre(4.2, 8.7) = 33.4
+payout(8.5, 4.2, 8.7)    = 283.9
+ten_day_total(week)      = 917.5
+
+=== return vs print ===
+payout is 300.0
+value kept from show_payout: None (None - it only printed)
+value returned by payout() can be reused: 583.9
+
+=== docstrings ===
+rate_per_litre: Return the price per litre (float, 2 decimals) for the given fat % and SNF %.
+payout: Return the amount payable (litres x rate), rounded to 2 decimals.
+ten_day_total: Return the sum of the payouts of (litres, fat, snf) tuples, rounded to 2 decimals.
+help() reads the same text: True
+
+=== local vs global names ===
+read_constant()  -> 30.0
+try_to_change()  -> UnboundLocalError: cannot access local variable 'BASE_RATE' where it is not associated with a value
+local_only()     -> 99.0 | global BASE_RATE still 30.0
+Rule: functions may READ constants; never rebind them (no 'global BASE_RATE' for rates).
+
+=== ALTERNATIVE: one long script / lambda vs functions (timing) ===
+         n  functions (ms)  inline script (ms)  lambda (ms)  same total?
+       300            0.26                0.30         0.28  True
+      6000            4.58                5.84         7.95  True
+    150000          113.84              134.26       133.59  True
+  All are O(n) time, O(1) extra space. The measured difference between functions, inline
+  code and lambda is within normal timing noise (a call costs well under a microsecond and
+  the arithmetic dominates), so function-call overhead is NOT a reason to avoid functions.
+  Functions give: no repeated code, one place to
+  fix a bug, docstrings, and easy testing. A lambda is just an unnamed one-expression function:
+  no docstring, no statements, harder to debug.

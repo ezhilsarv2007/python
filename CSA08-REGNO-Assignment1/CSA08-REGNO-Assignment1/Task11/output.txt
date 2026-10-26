@@ -1,0 +1,36 @@
+$ python task11_final_design.py
+=== EVIDENCE 1: exact money at district-union scale (150,000 farmers) ===
+150000 payments -> total Rs 108468099.83 in 0.22 s  (every payment correct to the paisa)
+Two decimal places guaranteed: True
+
+=== EVIDENCE 2: rate card read from a JSON file at start-up ===
+Loaded: {'base_rate': '30.00', 'standard_fat': '3.5', 'standard_snf': '8.5', 'step': '0.1', 'fat_step_value': '0.40', 'snf_step_value': '0.30'}
+rate(4.2, 8.7) with the JSON card : 33.40 (must equal module result 33.40 )
+
+Rate revision WITHOUT touching the program: edit only the JSON text
+rate(4.2, 8.7) with revised card  : 35.75 (32.00 + 7 x 0.45 + 2 x 0.30 = 35.75)
+
+=== EVIDENCE 3: start-up time and space for t values in the file ===
+  t values  file bytes  read+convert (ms)  dict bytes
+         6         114              0.007         272
+       600       13580              0.241       13056
+     60000     1597780             34.487     1922480
+A rate card has about 6-10 values: reading it costs microseconds, O(t) time and O(t) space, once per run.
+
+=== RECOMMENDATION (based on the experiments above and in Tasks 2, 4 and 10) ===
+Types      : Decimal for litres, fat, snf, rates and money (never float); str for ids and shift;
+             int only for counts.
+Rounding   : ROUND_HALF_UP to the paisa on EACH payment; ten-day total = sum of rounded payments;
+             steps counted with round-to-nearest (never int() or floor()).
+Revision   : change the rate values in ONE place - rate_card.json (strings, so Decimal is exact) -
+             with no program change; keep a dated copy of each card for audit.
+Structure  : constants/rate card in one module, small functions (rate, payout, validate),
+             assert-based tests re-run after every change.
+Limitations: Decimal is ~5-8x slower than float (still < 1 s for 150,000 payments);
+             SNF limits and the 1000 L cap are assumptions to be confirmed with the union;
+             a JSON card has no validation of its own - a typo in a value is read as is
+             (should check ranges after loading); entries are processed in memory, so a
+             district union running millions of rows would need streaming or a database;
+             one rate card applies to all dates (seasons are handled in Task 12).
+Scale      : correct at 300, 6,000 and 150,000 farmers: time grows linearly, O(n), and the
+             running total needs O(1) extra memory.

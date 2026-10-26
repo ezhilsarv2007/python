@@ -1,0 +1,27 @@
+$ python algorithm.py
+=== Hand-trace check (compare with pseudocode.md) ===
+  step 1: litres=10 fat=3.5 snf=8.5
+      fat steps +0, snf steps +0, rate 30.00, amount 300.00
+      running total = 300.00
+  step 2: litres=8.5 fat=4.2 snf=8.7
+      fat steps +7, snf steps +2, rate 33.40, amount 283.90
+      running total = 583.90
+  step 3: litres=12 fat=3.1 snf=8.3
+      fat steps -4, snf steps -2, rate 27.80, amount 333.60
+      running total = 917.50
+Program total: 917.50 | hand-trace total: 917.50 -> MATCH
+
+=== Invalid entries are skipped, not added ===
+917.50 (same 917.50)
+
+=== ALTERNATIVE: running total (O(1) space) vs stored list (O(n) space) ===
+         n  running ms  stored ms  running peak KB  stored peak KB  equal?
+       300        0.71       0.71              0.9            33.4  True
+      6000       13.00      12.96              0.9           661.7  True
+    150000      353.08     325.54              0.9         16488.0  True
+
+Time is O(n) for both (each entry is handled once). Extra space: running total keeps ONE number
+= O(1); the stored list keeps n amounts = O(n) (see the peak-memory columns growing).
+Storing the entries is STILL necessary when you must: print a farmer's statement line by line,
+audit or re-check any single payment, export every payment to the bank file, or re-calculate
+after a rate correction - i.e. whenever the individual values are needed after the total.

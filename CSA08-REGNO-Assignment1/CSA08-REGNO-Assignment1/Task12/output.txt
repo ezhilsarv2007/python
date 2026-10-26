@@ -1,0 +1,81 @@
+$ python task12_design_challenge.py
+==============================================================================
+A. IMPACT ANALYSIS
+==============================================================================
+What changed
+  1. Analyser readings now have TWO decimals (fat 4.25, snf 8.55) - before: one decimal.
+  2. Seasonal card: Apr-Jun base Rs 32.00 and fat step Rs 0.45 (SNF step stays Rs 0.30).
+  3. NEW rule at the ten-day level: > 500 L in ten days earns Rs 0.50 per litre bonus.
+Affected parts of the original design
+  constants   : BASE_RATE and FAT_STEP_VALUE are no longer single values -> one RateCard per season.
+  expressions : round((fat - 3.5) / 0.1) assumed 1-decimal data; now (4.25 - 3.5)/0.1 = 7.5 steps.
+  functions   : rate_per_litre(fat, snf) has no way to know the date/season; payout() likewise.
+  new         : a bonus function needing the TEN-DAY litres, which no per-entry function has.
+  module      : milkrate.py still imports fine but now holds only the normal card.
+Two-decimal readings and the step count (fat 4.25, snf 8.55):
+  exact steps          : fat 7.5  snf 0.5
+  round() (original)   : fat 8  snf 1  <- every x.5 step is a TIE: float noise and ties-to-even decide the result, not a rule
+
+==============================================================================
+B. EVALUATION OF THE ORIGINAL DESIGN (worked examples with the new readings)
+==============================================================================
+litres   fat   snf |  original (normal card) |  new, normal card | difference
+    10  4.25  8.55 |                   33.50 |             33.15 |       0.35
+    10  3.55  8.45 |                   29.70 |             30.05 |      -0.35
+    10  3.75   8.5 |                   30.80 |             31.00 |      -0.20
+    10  3.45   8.5 |                   30.00 |             29.80 |       0.20
+Verdict on the original parts
+  RETAIN : constants in ONE place, small functions with docstrings, Decimal for money,
+           'round each payment' rule, validation, assert-based tests, module structure.
+  FAIL   : float + round() mishandles 2-decimal readings (a half step is a tie: fat 3.75 is
+           rounded DOWN to 2 steps and fat 3.45 to 0 steps, so farmers lose or gain Rs 0.20-0.35
+           per litre); no season; no ten-day bonus.
+  => MODIFY (not redesign, not retain): the architecture is sound, three pieces change.
+
+==============================================================================
+C. ADAPTATION - milkrate_v2.py (RateCard + select_rate_card + payout(date) + bonus())
+==============================================================================
+select_rate_card(15 Mar) -> normal (Jul-Mar)
+select_rate_card(15 May) -> summer (Apr-Jun)
+rate(4.25, 8.55) normal  -> 33.15
+rate(4.25, 8.55) summer  -> 35.53  (32.00 + 7.5 x 0.45 + 0.5 x 0.30 = 35.525 -> 35.53)
+bonus(550 L) -> 275.00 | bonus(500 L) -> 0.00 | bonus(500.1 L) -> 250.05
+
+==============================================================================
+D. EVIDENCE-BASED DEFENCE - tests for both seasons and the bonus
+==============================================================================
+Test                               Exp rate Act rate  Exp amt  Act amt  Result
+normal season, standard milk          30.00    30.00   300.00   300.00  PASS
+normal season, sample 2               33.40    33.40   283.90   283.90  PASS
+normal season, sample 3               27.80    27.80   333.60   333.60  PASS
+summer, standard milk                 32.00    32.00   320.00   320.00  PASS
+summer, fat 4.2 snf 8.7               35.75    35.75   303.88   303.88  PASS
+summer, fat 3.1 snf 8.3               29.60    29.60   355.20   355.20  PASS
+summer, 2-decimal 4.25 / 8.55         35.53    35.53   355.30   355.30  PASS
+normal, 2-decimal 3.75 / 8.5          31.00    31.00   310.00   310.00  PASS
+first day of summer (1 Apr)           32.00    32.00   320.00   320.00  PASS
+last day of summer (30 Jun)           32.00    32.00   320.00   320.00  PASS
+day after summer (1 Jul)              30.00    30.00   300.00   300.00  PASS
+
+Ten-day bonus tests (summer, standard milk, rate 32.00)
+Test                                litres   payments    bonus  grand total  Result
+55 entries x 10 L = 550 L              550   17600.00   275.00     17875.00  PASS
+exactly 500 L: NO bonus                500   16000.00     0.00     16000.00  PASS
+500.1 L: bonus on all litres         500.1   16003.20   250.05     16253.25  PASS
+small farmer 30 L: no bonus             30     960.00     0.00       960.00  PASS
+
+Mixed ten days across the season boundary (28 Mar - 6 Apr style): each entry uses ITS date's card
+  300.00 (Mar) + 320.00 (Apr) = 620.00  PASS
+
+SUMMARY: 16 tests passed, 0 failed
+
+Trade-offs and defence of MODIFY
+  + Re-uses the tested core (Decimal, round each payment, validation); only 3 pieces change.
+  + A new season = one new RateCard line; the bonus = one constant pair; no copy-paste of formulas.
+  + Fractional steps pro-rate 2-decimal readings fairly and need no rounding of steps at all.
+  - Pro-rating changes amounts versus the old method for 2-decimal data (see section B): the union
+    must confirm that fractional steps are intended.
+  - Assumptions to confirm: bonus on ALL litres once > 500 L, in every season; bonus not rounded
+    per entry but once per ten days; seasons by calendar month of each entry.
+  - A redesign (database, rules engine) would be over-engineering for 150,000 farmers and
+    four rules; RETAIN would leave wrong payments, so MODIFY is the evidence-based choice.

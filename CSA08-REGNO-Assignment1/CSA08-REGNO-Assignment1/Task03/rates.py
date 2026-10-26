@@ -1,0 +1,10 @@
+"""Single place for every rate and limit (Task 3). A rate revision = edit THIS file only."""
+BASE_RATE = 30.00          # Rs per litre at standard quality
+STANDARD_FAT = 3.5         # % fat of standard milk
+STANDARD_SNF = 8.5         # % SNF of standard milk
+STEP_SIZE = 0.1            # % per step
+FAT_STEP_VALUE = 0.40      # Rs per litre per fat step
+SNF_STEP_VALUE = 0.30      # Rs per litre per SNF step
+MIN_FAT, MAX_FAT = 2.0, 7.0
+MIN_SNF, MAX_SNF = 7.0, 10.0
+PAYMENT_DAYS = 10

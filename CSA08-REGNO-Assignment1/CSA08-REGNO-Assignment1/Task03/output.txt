@@ -1,0 +1,39 @@
+$ python task03_constants.py
+=== 1. Naming rules ===
+Valid  : farmer_id, litres_1, _tmp, BASE_RATE      Invalid: 1litre, fat%, my rate, class
+Reserved words cannot be names: ['False', 'None', 'True', 'and', 'as', 'assert', 'async', 'await'] ...
+Convention: snake_case for variables/functions, UPPER_CASE for constants.
+
+=== 2. Constants live in rates.py ===
+BASE_RATE = 30.0 | FAT_STEP_VALUE = 0.4 | SNF_STEP_VALUE = 0.3
+
+=== 3. Python has no TRUE constants ===
+After rates.BASE_RATE = 99.0 -> 99.0 (the name was rebound, no error)
+Restored -> 30.0 (tools such as typing.Final / linters can warn, the interpreter does not stop you)
+
+=== 4. Dynamic typing: same name, different types ===
+x = 8 <class 'int'>
+x = eight <class 'str'>
+x = 8.5 <class 'float'>
+8 + '5' -> TypeError : unsupported operand type(s) for +: 'int' and 'str'
+int('8') + 5 = 13  | '8' + str(5) = 85
+
+=== 5. Multiple assignment and swapping ===
+fat, snf = 4.2 8.7
+after fat, snf = snf, fat -> 8.7 4.2
+chained: low = high = 0 -> 0 0
+unpacking a, *rest -> 10 [8.5, 4.2]
+
+=== 6. ALTERNATIVES: magic numbers vs dictionary vs constants ===
+rate(4.2, 8.7): magic = 33.4 | dict = 33.4 | constants = 33.4
+  magic numbers   :     215 ns per call
+  dict RATE_CARD  :     278 ns per call
+  named constants :     234 ns per call
+
+Places to change for ONE rate revision (e.g. fat step 0.40 -> 0.45), k = number of
+expressions that use it:
+  magic numbers : k places (a missed one = a partly applied revision, the volunteer's bug)
+  dictionary    : 1 place, but a typo in a key ("fta") only fails at run time (KeyError)
+  named constants: 1 place, a typo in a name fails at once with NameError/linters
+Running time: all O(1) per call; the dictionary lookup adds ~2 hash lookups (a few ns).
+Memory: constants = a few objects, O(1) in all three designs.

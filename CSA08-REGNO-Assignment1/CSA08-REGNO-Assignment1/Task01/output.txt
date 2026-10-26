@@ -1,0 +1,72 @@
+$ python task01_analysis.py
+TASK 1 - PROBLEM ANALYSIS
+
+INPUTS (name | type | kind | why)
+---------------------------------
+  farmer_id | str | text | Codes like 'F017' or '0042'; leading zeros must survive, never used in arithmetic
+  shift | str | text | 'M' (morning) or 'E' (evening); a label, not a number
+  litres | Decimal | fractional | Quantity can be 8.5 L; must be exact because money depends on it
+  fat | Decimal | fractional | Fat % e.g. 4.2; compared in 0.1 steps, so binary float errors matter
+  snf | Decimal | fractional | SNF % e.g. 8.7; same reason as fat
+
+OUTPUTS (name | type | kind | why)
+----------------------------------
+  rate_per_litre | Decimal | fractional | Rs/litre after fat and SNF adjustment, 2 decimals
+  amount | Decimal | fractional | litres x rate, rounded to the paisa (2 decimals)
+  ten_day_total | Decimal | fractional | Sum of the rounded amounts of one farmer in 10 days
+  entry_count | int | whole | How many entries were processed (counting only)
+
+NAMED CONSTANTS (name | value | meaning)
+----------------------------------------
+  BASE_RATE | 30.00 | Rs/litre at 3.5% fat and 8.5% SNF
+  STANDARD_FAT | 3.5 | reference fat %
+  STANDARD_SNF | 8.5 | reference SNF %
+  STEP | 0.1 | size of one fat/SNF step in %
+  FAT_STEP_VALUE | 0.40 | Rs/litre per fat step
+  SNF_STEP_VALUE | 0.30 | Rs/litre per SNF step
+  MIN_FAT / MAX_FAT | 2.0 / 7.0 | valid fat range
+  MIN_SNF / MAX_SNF | 7.0 / 10.0 | valid SNF range (assumption)
+  PAYMENT_DAYS | 10 | settlement cycle in days
+
+RULES every correct payment must satisfy
+----------------------------------------
+  R1. litres must be a number greater than 0 (no negative or zero quantity)
+  R2. fat must satisfy 2.0 <= fat <= 7.0 (outside = analyser/clerk error or adulteration)
+  R3. snf must satisfy 7.0 <= snf <= 10.0 (assumed range)
+  R4. shift must be 'M' or 'E'
+  R5. farmer_id must not be empty
+  R6. rate per litre and amount are rounded to 2 decimals (paisa) with ROUND_HALF_UP
+  R7. the ten-day total is the SUM OF THE ROUNDED PAYMENTS (that is what the bank pays)
+
+ASSUMPTIONS
+-----------
+  A1. fat and SNF are read to ONE decimal place at the centre (the analyser comes later in Task 12)
+  A2. half-paisa is rounded up (ROUND_HALF_UP), the usual accounting rule
+  A3. a fat/SNF step is counted to the NEAREST whole 0.1 step
+  A4. one entry = one farmer, one shift; a farmer may have up to 20 entries in 10 days
+  A5. SNF limits 7.0-10.0 are not given in the question, so they are an assumption
+
+
+=== ALTERNATIVE CONCEPT: separate variables vs one tuple per entry ===
+
+Design A: litres1, fat1, snf1, litres2, ... (three names per farmer)
+  n=   300:    601 lines of source,    900 variable names, compile+run    13.39 ms, total = 94500.00
+  n=  6000:  12001 lines of source,  18000 variable names, compile+run   188.91 ms, total = 1890000.00
+  n=150000 would need 450,000 variable names and ~300,000 hand-written lines: not practical.
+  Adding ONE more farmer means EDITING THE PROGRAM (new names, new line).
+
+Design B: one tuple per entry inside a list, one loop for any n
+  n=300 total = 94500.00  (same answer as design A, 3 lines of code)
+
+Time and space of Design B (loop with a list of tuples):
+         n    time (ms)    list size (bytes)
+       300         0.09                 2520
+      6000         1.87                53080
+    150000        60.97              1283160
+
+Complexity
+  Both designs do the same arithmetic per entry, so TIME is O(n) for both.
+  SPACE: both store 3n numbers = O(n) data, BUT design A also needs 3n distinct
+  NAMES in the program text (source size O(n), a symbol table of 3n entries) and
+  its CODE must grow with n; design B's code is O(1) in size. Only design B scales:
+  the program does not change when the number of farmers changes.

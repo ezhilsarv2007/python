@@ -1,0 +1,61 @@
+$ python task04_expressions.py
+=== The required expressions ===
+fat_steps(4.2)          = 7
+snf_steps(8.7)          = 2
+rate_per_litre(4.2,8.7) = 33.4
+amount(8.5,4.2,8.7)     = 283.9
+
+=== Operator precedence and associativity ===
+  2 + 3 * 4              -> 14
+  (2 + 3) * 4            -> 20
+  2 ** 3 ** 2            -> 512
+  (2 ** 3) ** 2          -> 64
+  -2 ** 2                -> -4
+  (-2) ** 2              -> 4
+  10 - 4 - 3             -> 3
+  100 / 10 / 5           -> 2.0
+  -7 // 2                -> -4
+  not True or True       -> True
+  not (True or True)     -> False
+  ** is RIGHT associative and binds tighter than unary minus; - and / are LEFT associative.
+
+=== Surprises ===
+1) (4.2 - 3.5) / 0.1 = 7.000000000000002   <- not exactly 7
+   int((4.2 - 3.5) / 0.1) = 7 | round(...) = 7
+2) (3.1 - 3.5) / 0.1 = -3.999999999999999   int() gives -3 (WRONG, should be -4); round() gives -4
+3) round(2.5) = 2 | round(3.5) = 4 | round(0.5) = 0  <- banker's rounding (ties go to the EVEN number)
+4) round(2.675, 2) = 2.67  <- 2.675 is stored as 2.67499999...
+5) 0.1 + 0.2 = 0.30000000000000004
+6) -2 ** 2 = -4  <- power first, then minus
+
+=== round() vs int() vs math.floor() for negative values ===
+       x  round   int  floor  ceil
+    -2.5     -2    -2     -3    -2
+    -2.4     -2    -2     -3    -2
+    -2.6     -3    -2     -3    -2
+     2.5      2     2      2     3
+     2.6      3     2      2     3
+  int() truncates towards 0, floor() goes down, round() goes to nearest (ties to even).
+
+=== Comparison chaining and Boolean operators ===
+2.0 <= fat <= 7.0 with fat=4.2 -> True
+  fat=1.9: 2.0 <= fat <= 7.0 -> False   (same as 2.0 <= fat and fat <= 7.0)
+  fat=2.0: 2.0 <= fat <= 7.0 -> True   (same as 2.0 <= fat and fat <= 7.0)
+  fat=7.0: 2.0 <= fat <= 7.0 -> True   (same as 2.0 <= fat and fat <= 7.0)
+  fat=7.1: 2.0 <= fat <= 7.0 -> False   (same as 2.0 <= fat and fat <= 7.0)
+valid? -> True (and stops at first False: short-circuit)
+
+=== ALTERNATIVE: int() / math.floor() instead of round() ===
+   fat  snf |   round     int   floor
+   4.2  8.5 |   32.80   32.80   32.80
+   3.1  8.5 |   28.40   28.80   28.40
+   4.2  8.7 |   33.40   33.10   33.10
+   3.1  8.3 |   27.80   28.50   27.80
+  Correct answers: fat 4.2 -> 32.80 ; fat 3.1 -> 28.40 ; (4.2, 8.7) -> 33.40.
+  int() truncates TOWARDS ZERO: (3.1-3.5)/0.1 = -3.999999 -> -3 instead of -4, so the rate
+  for fat 3.1 is 28.80 (a farmer is OVERPAID Rs 0.40 per litre).
+  floor() goes DOWN: (8.7-8.5)/0.1 = 1.999999 -> 1 instead of 2, so (4.2, 8.7) gives 33.10
+  (a farmer is UNDERPAID Rs 0.30 per litre).
+  Only round() is safe, because it moves to the NEAREST whole step, so a tiny float error
+  of 1e-15 can never change the step count.
+  Cost: each is one arithmetic expression plus one call: time O(1), space O(1).
