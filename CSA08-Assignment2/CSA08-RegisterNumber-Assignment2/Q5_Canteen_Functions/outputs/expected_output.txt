@@ -1,0 +1,20 @@
+MUTABLE DEFAULT BUG
+['Tea', 'Vada'] ['Tea', 'Vada']
+
+CORRECTED ORDERS
+Customer 1: ['Tea']
+Customer 2: ['Vada']
+Customer 3: ['Sandwich']
+
+BILL
+Total: 210.0 | GST: 10.0
+
+SCOPE
+Inside change_local: new local message
+Outside function: local message
+Nonlocal count: 1
+Nonlocal count: 2
+Before global function: original global value
+After global function: changed using global keyword
+
+The exact stored-default display contains the shared list after the buggy calls.

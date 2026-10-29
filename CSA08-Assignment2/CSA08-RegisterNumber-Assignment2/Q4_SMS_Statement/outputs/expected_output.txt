@@ -1,0 +1,1 @@
+The program prints matching-text checks, output lengths and three-run average timings for 1,000, 10,000 and 200,000 lines. Your timing values will differ from these on other computers.

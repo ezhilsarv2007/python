@@ -1,0 +1,30 @@
+HAND CHECK
+n = 1 | ways = 1
+n = 2 | ways = 2
+n = 3 | ways = 3
+n = 4 | ways = 5
+n = 5 | ways = 8
+n = 6 | ways = 13
+
+CALL COUNT COMPARISON
+n = 10 | result: 89 | naive calls: 177 | memo calls: 11
+n = 20 | result: 10946 | naive calls: 21891 | memo calls: 21
+n = 25 | result: 121393 | naive calls: 242785 | memo calls: 26
+n = 30 | result: 1346269 | naive calls: 2692537 | memo calls: 31
+
+LARGE INPUT
+Recursion limit: 1000
+Memoised recursion reached the Python recursion limit.
+Loop n=1000: 70330367711422815821835254877183549770181269836358732742604905087154537118196933579742249494562611733487750449241765991088186363265450223647106012053374121273867339111198139373125598767690091902245245323403501
+
+ERRORS:
+Spreadsheet runtime warmup failed during python startup
+Traceback (most recent call last):
+  File "/tmp/tmp.QlpUkOUI9D/artifact_tool_v2-2.8.66/artifact_tool/patches/warm_spreadsheet_runtime_on_startup.py", line 26, in warm_spreadsheet_runtime_on_startup
+  File "/tmp/tmp.QlpUkOUI9D/artifact_tool_v2-2.8.66/artifact_tool/spreadsheet_warmup.py", line 785, in warm_spreadsheet_runtime
+  File "/tmp/tmp.QlpUkOUI9D/artifact_tool_v2-2.8.66/artifact_tool/spreadsheet_warmup.py", line 718, in _warm_feature_flows
+  File "/tmp/tmp.QlpUkOUI9D/artifact_tool_v2-2.8.66/artifact_tool/spreadsheet_warmup.py", line 509, in _warm_drawing_and_image_flows
+  File "/tmp/tmp.QlpUkOUI9D/artifact_tool_v2-2.8.66/artifact_tool/generated/interface/models.py", line 32861, in bring_to_front
+  File "/tmp/tmp.QlpUkOUI9D/artifact_tool_v2-2.8.66/artifact_tool/rpc/remote.py", line 764, in __call__
+  File "/tmp/tmp.QlpUkOUI9D/artifact_tool_v2-2.8.66/artifact_tool/rpc/client.py", line 175, in call
+artifact_tool.rpc.client.RemoteError: Element ordering requires an owning element collection.

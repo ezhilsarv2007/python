@@ -1,0 +1,1 @@
+For n=10, 20 and 30, both versions should return the same result. Timings vary by computer. The redesigned loop should complete n=1000 and report the number of digits in the answer.

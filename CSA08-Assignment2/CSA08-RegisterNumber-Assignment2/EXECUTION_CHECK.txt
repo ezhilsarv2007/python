@@ -1,0 +1,9 @@
+Q1_Decisions/q1_subsidy.py: PASS
+Q2_OTP_Loops/q2_otp.py: PASS
+Q3_Number_Plate/q3_validator.py: PASS
+Q4_SMS_Statement/q4_statement.py: PASS
+Q5_Canteen_Functions/q5_canteen.py: PASS
+Q6_Temple_Recursion/q6_temple.py: PASS
+Q7_Redesign/q7_redesign.py: PASS
+
+These runs were generated in the preparation environment. Re-run on your own computer and save your own screenshots/timings.

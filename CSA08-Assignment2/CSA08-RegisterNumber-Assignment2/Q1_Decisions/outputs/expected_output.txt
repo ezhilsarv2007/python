@@ -1,0 +1,1 @@
+Run q1_subsidy.py to generate the output for all eight households. The output includes the separate-if and if-elif-else decisions side by side.

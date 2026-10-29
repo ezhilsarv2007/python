@@ -1,0 +1,26 @@
+ORIGINAL VS REDESIGNED
+n = 10 | same answer: True
+  Original recursive: 89 | time: 8e-06 seconds
+  Redesigned loop   : 89 | time: 2e-06 seconds
+n = 20 | same answer: True
+  Original recursive: 10946 | time: 0.000654 seconds
+  Redesigned loop   : 10946 | time: 2e-06 seconds
+n = 30 | same answer: True
+  Original recursive: 1346269 | time: 0.082062 seconds
+  Redesigned loop   : 1346269 | time: 5e-06 seconds
+
+Large input
+n = 1000 | answer has 209 digits
+Loop time: 5.1e-05 seconds
+
+ERRORS:
+Spreadsheet runtime warmup failed during python startup
+Traceback (most recent call last):
+  File "/tmp/tmp.QlpUkOUI9D/artifact_tool_v2-2.8.66/artifact_tool/patches/warm_spreadsheet_runtime_on_startup.py", line 26, in warm_spreadsheet_runtime_on_startup
+  File "/tmp/tmp.QlpUkOUI9D/artifact_tool_v2-2.8.66/artifact_tool/spreadsheet_warmup.py", line 785, in warm_spreadsheet_runtime
+  File "/tmp/tmp.QlpUkOUI9D/artifact_tool_v2-2.8.66/artifact_tool/spreadsheet_warmup.py", line 718, in _warm_feature_flows
+  File "/tmp/tmp.QlpUkOUI9D/artifact_tool_v2-2.8.66/artifact_tool/spreadsheet_warmup.py", line 509, in _warm_drawing_and_image_flows
+  File "/tmp/tmp.QlpUkOUI9D/artifact_tool_v2-2.8.66/artifact_tool/generated/interface/models.py", line 32861, in bring_to_front
+  File "/tmp/tmp.QlpUkOUI9D/artifact_tool_v2-2.8.66/artifact_tool/rpc/remote.py", line 764, in __call__
+  File "/tmp/tmp.QlpUkOUI9D/artifact_tool_v2-2.8.66/artifact_tool/rpc/client.py", line 175, in call
+artifact_tool.rpc.client.RemoteError: Element ordering requires an owning element collection.

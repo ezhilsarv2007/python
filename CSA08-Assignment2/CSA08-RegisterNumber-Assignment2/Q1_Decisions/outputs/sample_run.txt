@@ -1,0 +1,40 @@
+HOUSEHOLD SUBSIDY CHECK
+------------------------------------------------------------------------------
+H1 | units: 100 | ration: False | age 80+: False
+  Separate if : Full subsidy
+  if-elif-else: Full subsidy
+H2 | units: 101 | ration: True | age 80+: False
+  Separate if : Partial subsidy
+  if-elif-else: Partial subsidy
+H3 | units: 150 | ration: False | age 80+: False
+  Separate if : No subsidy
+  if-elif-else: No subsidy
+H4 | units: 200 | ration: True | age 80+: False
+  Separate if : Partial subsidy
+  if-elif-else: Partial subsidy
+H5 | units: 201 | ration: False | age 80+: False
+  Separate if : No subsidy
+  if-elif-else: No subsidy
+H6 | units: 250 | ration: False | age 80+: True
+  Separate if : Senior-member exception subsidy
+  if-elif-else: Senior-member exception subsidy
+H7 | units: 80 | ration: True | age 80+: True
+  Separate if : Full subsidy
+  if-elif-else: Full subsidy
+H8 | units: 200 | ration: True | age 80+: True
+  Separate if : Partial subsidy
+  if-elif-else: Partial subsidy
+
+Design decision: if-elif-else is clearer because the household receives one decision.
+
+ERRORS:
+Spreadsheet runtime warmup failed during python startup
+Traceback (most recent call last):
+  File "/tmp/tmp.QlpUkOUI9D/artifact_tool_v2-2.8.66/artifact_tool/patches/warm_spreadsheet_runtime_on_startup.py", line 26, in warm_spreadsheet_runtime_on_startup
+  File "/tmp/tmp.QlpUkOUI9D/artifact_tool_v2-2.8.66/artifact_tool/spreadsheet_warmup.py", line 785, in warm_spreadsheet_runtime
+  File "/tmp/tmp.QlpUkOUI9D/artifact_tool_v2-2.8.66/artifact_tool/spreadsheet_warmup.py", line 718, in _warm_feature_flows
+  File "/tmp/tmp.QlpUkOUI9D/artifact_tool_v2-2.8.66/artifact_tool/spreadsheet_warmup.py", line 509, in _warm_drawing_and_image_flows
+  File "/tmp/tmp.QlpUkOUI9D/artifact_tool_v2-2.8.66/artifact_tool/generated/interface/models.py", line 32861, in bring_to_front
+  File "/tmp/tmp.QlpUkOUI9D/artifact_tool_v2-2.8.66/artifact_tool/rpc/remote.py", line 764, in __call__
+  File "/tmp/tmp.QlpUkOUI9D/artifact_tool_v2-2.8.66/artifact_tool/rpc/client.py", line 175, in call
+artifact_tool.rpc.client.RemoteError: Element ordering requires an owning element collection.
