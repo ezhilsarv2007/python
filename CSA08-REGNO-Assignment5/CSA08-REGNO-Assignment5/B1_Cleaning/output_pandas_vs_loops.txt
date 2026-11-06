@@ -1,0 +1,7 @@
+Same cleaning rules, two implementations (each run in its own process)
+      rows |  loop time  loop MB | pandas time  pandas MB | speed-up | same rows | same pm25 sum
+      1000 |     0.014s      2.4 |      0.008s        2.6 |     1.8x |      True | True
+    100000 |     1.401s     61.5 |      0.112s       37.3 |    12.5x |      True | True
+   1000000 |    15.387s    610.7 |      1.315s      305.4 |    11.7x |      True | True
+
+(memory = peak extra MB of the process while cleaning, measured with resource.getrusage)

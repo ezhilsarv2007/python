@@ -1,0 +1,9 @@
+positive | Roads are clean and the bus was fast.
+negative | Smoke from the factory, air is bad.
+negative | The staff were not helpful.
+positive | Not bad, service improved.
+
+--- a complaint the scorer gets wrong ---
+positive | The bus was not very good.
+The person is unhappy (should be negative) but 'very' sits between 'not' and 'good',
+so the negator is no longer the previous word and 'good' counts as +1.

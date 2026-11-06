@@ -1,0 +1,102 @@
+======================================================================
+PART 1 - small file containing every problem from A1.1
+======================================================================
+
+BEFORE cleaning (13 rows):
+  station  date        hour    pm25   pm10   no2   temp
+  Adyar    2026-10-01     8      48     90    30   29.5
+  Adyar    2026-10-01     9      NA     92    31   30.1
+  Adyar    2026-10-01    10             95         30.8
+  Adyar    2026-10-01    10             95         30.8
+   adyar   2026-10-01    11      -5     88    29   31.0
+  Adyar    01/10/2026    12      55    100    35   31.2
+  Adyar    2026-10-01    13    5000     99    36   31.9
+  Guindy   2026-10-01     8      95    160    40   86.0
+  Guindy   2026-10-01     9     101    170    42   88.5
+  Guindy   2026-10-01    10     abc    175    44   90.0
+  Manali   not-a-date     8      70    120    33   30.0
+  Manali   2026-10-01     8      NA    120    33   30.0
+  Manali   2026-10-01     9     130    200    50   31.0
+
+AFTER cleaning (10 rows):
+  station  date        hour    pm25   pm10   no2   temp
+  Adyar    2026-10-01     8    48.0   90.0  30.0   29.5
+  Adyar    2026-10-01     9    48.0   92.0  31.0   30.1
+  Adyar    2026-10-01    10    48.0   95.0  31.0   30.8
+  Adyar    2026-10-01    11    48.0   88.0  29.0   31.0
+  Adyar    2026-10-01    12    55.0  100.0  35.0   31.2
+  Adyar    2026-10-01    13    55.0   99.0  36.0   31.9
+  Guindy   2026-10-01     8    95.0  160.0  40.0   30.0
+  Guindy   2026-10-01     9   101.0  170.0  42.0   31.4
+  Guindy   2026-10-01    10   101.0  175.0  44.0   32.2
+  Manali   2026-10-01     9   130.0  200.0  50.0   31.0
+
+What the cleaner did:
+  read                    13
+  bad_date                1
+  duplicates              1
+  fahrenheit_converted    3
+  impossible_to_missing   2
+  forward_filled          6
+  dropped_no_previous     1
+
+Notes:
+  - Guindy temperature 86.0 F became 30.0 C (Guindy is a Fahrenheit station)
+  - the 5000 and -5 pm25 values were treated as missing and then forward filled
+  - the 'abc' pm25 for Guindy was filled with the previous value 101
+  - Manali's first row had a bad date and was dropped; its next row had NA pm25 and
+    no previous value to copy, so it was dropped too
+
+Normalisation of the cleaned pm25 values: [48.0, 48.0, 48.0, 48.0, 55.0, 55.0, 95.0, 101.0, 101.0, 130.0]
+  min-max : [0.0, 0.0, 0.0, 0.0, 0.085, 0.085, 0.573, 0.646, 0.646, 1.0]
+  z-score : [-0.857, -0.857, -0.857, -0.857, -0.616, -0.616, 0.76, 0.967, 0.967, 1.964]
+
+======================================================================
+PART 2 - one month of data: clean, store in SQLite, query, chart
+======================================================================
+rows cleaned: 2976
+  read                    2981
+  bad_date                0
+  duplicates              5
+  fahrenheit_converted    1488
+  impossible_to_missing   35
+  forward_filled          117
+  dropped_no_previous     0
+rows stored in SQLite: 2976
+
+Q1. Average PM2.5 of Adyar in October 2026:
+    56.38
+
+Q2. Stations ranked by average PM2.5 (worst first):
+    Manali    121.37
+    Guindy    96.06
+    Velachery 70.91
+    Adyar     56.38
+
+Q3. The three hours of the day with the worst average PM2.5:
+    20:00   106.84
+    08:00   106.02
+    21:00   105.73
+
+Charts saved:
+  chart1_trend_line.png      line chart of the daily mean PM2.5 for each station
+  chart2_station_bar.png     bar chart comparing stations
+  chart3_station_box.png     box plot showing spread and outliers per station
+  chart4_temp_scatter.png    scatter plot of temperature against PM2.5
+  chart5_hour_bar.png        bar chart of the average PM2.5 for each hour
+  chart6_histogram.png       histogram of all PM2.5 readings
+
+Interpretation:
+  Line chart  : all four lines stay roughly flat through the month, with day-to-day wiggles.
+                Manali is always the highest line and Adyar the lowest. The first week of
+                Manali averages 121.0 and the last week 121.7, so there is no clear trend.
+  Bar chart   : Manali (121.37) is about 2.2 times as polluted as Adyar (56.38).
+  Box plot    : the boxes do not overlap much, so the difference between stations is real and
+                not just noise. Dots above the whiskers are the high-pollution spikes.
+  Scatter     : correlation between temperature and PM2.5 is -0.23. Hotter hours tend to have
+                lower PM2.5 in this data (cool nights trap pollution near the ground).
+  Hour bars   : worst hour is 20:00 (106.8), cleanest is 14:00 (70.4).
+                Morning (7-9) and evening (19-21) rush hours stand out.
+  Histogram   : the readings spread over a wide range because the four stations sit at
+                different levels, with a tail to the right. A few very bad hours pull the mean up,
+                so the median is a safer centre than the mean.

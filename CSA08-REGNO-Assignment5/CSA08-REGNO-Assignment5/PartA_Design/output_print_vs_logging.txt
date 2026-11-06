@@ -1,0 +1,9 @@
+readings: 200000, of which 13340 are negative (each one is reported)
+
+version                                          time    extra
+no reporting at all                           0.0039s         
+print() for every negative reading            0.0088s  0.0049s
+logging.debug, level DEBUG (switched on)      0.0857s  0.0818s
+logging.debug, level WARNING (switched off)   0.0052s  0.0012s
+
+print() has to be deleted or commented out by hand; logging is switched off by changing the level.

@@ -1,0 +1,102 @@
+======================================================================
+1. BAD FILES: naive loader vs safe loader
+======================================================================
+
+cp1252_encoding.csv
+   naive : UnicodeDecodeError: 'utf-8' codec can't decode byte 0xed in position 24: invalid continuation byte
+   safe  : OK, encoding=cp1252, delimiter=',', rows=[('Kílpauk', '2026-10-01', 8, 64.0), ('Adyar', '2026-10-01', 8, 48.0)]
+
+empty.csv
+   naive : []
+   safe  : rejected cleanly -> file is empty
+
+missing_column.csv
+   naive : KeyError: 'pm25'
+   safe  : rejected cleanly -> missing column(s): ['pm25']; header was ['station', 'date', 'hour']
+
+utf16_encoding.csv
+   naive : UnicodeDecodeError: 'utf-8' codec can't decode byte 0xff in position 0: invalid start byte
+   safe  : OK, encoding=utf-16, delimiter=',', rows=[('Kílpauk', '2026-10-01', 8, 64.0), ('Adyar', '2026-10-01', 8, 48.0)]
+
+wrong_delimiter.csv
+   naive : KeyError: 'station'
+   safe  : OK, encoding=utf-8-sig, delimiter=';', rows=[('Adyar', '2026-10-01', 8, 48.0)]
+
+======================================================================
+2. STATION NAMES WITH A QUOTE: string building vs ? placeholder
+======================================================================
+
+input: 'Adyar'
+   + version  SQL  : SELECT AVG(pm25) FROM aq WHERE station = 'Adyar'
+   + version  gives: 54.0
+   ? version  gives: 54.0
+
+input: "St. Mary's Road"
+   + version  FAILED: OperationalError: near "s": syntax error
+   ? version  gives: 70.0
+
+input: "Adyar' OR '1'='1"
+   + version  SQL  : SELECT AVG(pm25) FROM aq WHERE station = 'Adyar' OR '1'='1'
+   + version  gives: 78.8
+   ? version  gives: None
+
+Reading the results:
+  - the real name 'St. Mary's Road' breaks the + version (the quote ends the string early)
+    but works with ?, because the value is never pasted into the SQL text
+  - the injection text changes the meaning of the + query: it returns the average of ALL rows
+    (data the user should not be able to reach); with ? it is just a station name that does
+    not exist, so the answer is None
+  - sqlite3's execute() refuses stacked statements: ProgrammingError: You can only execute one statement at a time.
+
+executemany() vs execute() in a loop (in-memory table, one commit at the end):
+      rows       loop  executemany
+     10000     0.010s       0.005s
+    100000     0.091s       0.059s
+    500000     0.546s       0.268s
+  both are O(n); executemany is faster by a constant factor because the loop pays Python call
+  overhead for every row
+
+======================================================================
+3. SENTIMENT SCORER vs TRICKY SENTENCES
+======================================================================
+
+[sarcasm] Oh great, another smoky day. Just wonderful.
+   score=+0  scorer says: neutral  human says: negative -> FAIL
+
+[sarcasm] Thanks a lot for ignoring our complaint again.
+   score=+1  scorer says: positive human says: negative -> FAIL
+
+[sarcasm] Fantastic, the air smells like a bonfire.
+   score=+0  scorer says: neutral  human says: negative -> FAIL
+
+[double negative] The staff were never not helpful.
+   score=-1  scorer says: negative human says: positive -> FAIL
+
+[double negative] I cannot say the service was not good.
+   score=-1  scorer says: negative human says: positive -> FAIL
+
+[negator too far] The bus was not very good.
+   score=+1  scorer says: positive human says: negative -> FAIL
+
+[negator too far] The air is not at all clean.
+   score=+1  scorer says: positive human says: negative -> FAIL
+
+[mixed] Staff were helpful but the burning smell and noise are terrible.
+   score=-3  scorer says: negative human says: mixed    -> FAIL
+
+[mixed] Roads are clean and the bus is fast but the air is toxic and smoky.
+   score=+0  scorer says: neutral  human says: mixed    -> FAIL
+
+[works] No smoke today, air is clean.
+   score=+2  scorer says: positive human says: positive -> OK
+
+[works] The new bus service wasn't bad.
+   score=+1  scorer says: positive human says: positive -> OK
+
+[works] The factory smoke is choking us.
+   score=-2  scorer says: negative human says: negative -> OK
+
+[unknown words] Bro the AQI is cooked, absolutely lit up red.
+   score=+0  scorer says: neutral  human says: negative -> FAIL
+
+Scorer was wrong on 10 of 13 sentences.

@@ -1,0 +1,83 @@
+==========================================================================
+B4.1 SENTIMENT SCORER on 54 complaints
+==========================================================================
+agree with my own labels: 42 of 54  (77.8%)
+
+confusion (rows = my label, columns = scorer):
+              positive  negative   neutral
+  positive          15         0         1
+  negative           1        17         4
+  neutral            3         3        10
+
+where the scorer disagrees with me:
+  me=negative scorer=neutral  | The bus was not very good, smoke came from the engine. Passengers were coughing. It should not 
+  me=negative scorer=neutral  | Factory chimney is releasing black smoke at night. We have complained three times. Still nothin
+  me=negative scorer=positive | Oh great, another smoky day. Just wonderful. Thanks for doing nothing again.
+  me=negative scorer=neutral  | Bro the AQI is cooked, absolutely lit up red. Cannot step outside without a mask.
+  me=negative scorer=neutral  | Thanks a lot for ignoring our complaint again. The dust has been there for a month.
+  me=positive scorer=neutral  | The water sprinklers at the construction site really help. Dust is much lower now. Good step.
+  me=neutral  scorer=negative | Is there a mobile number where I can send photos of burning waste? Also which office handles th
+  me=neutral  scorer=negative | Staff were helpful but the burning smell and noise are terrible. The office responded quickly w
+  me=neutral  scorer=positive | What is the safe limit for PM10? The app shows two different colours for the same number.
+  me=neutral  scorer=positive | The helpful staff gave me a phone number but it is not working. Please confirm the correct numb
+  me=neutral  scorer=negative | Is the dust from the road work harmful? Please advise what mask is suitable.
+  me=neutral  scorer=positive | Not only is the station fast, it is also clean. But the display needs a larger font for elderly
+
+Why: sarcasm, mixed opinions, negator not directly before the word ('not very good'),
+and slang or words that are not in the word list. Questions and requests with a stray
+positive word ('helpful staff ... not working') also get pushed to positive.
+
+==========================================================================
+B4.1 SUMMARISER: most-frequent-words vs first-two-sentences
+==========================================================================
+12 most frequent important words: ['air', 'burning', 'bus', 'clean', 'dust', 'fast', 'helpful', 'not', 'please', 'smell', 'smoke', 'station']
+
+complaint 1: The smoke from the factory near Manali is choking us. Children cough every night. Nobody has responded to our calls.
+   frequent-words summary: The smoke from the factory near Manali is choking us. Children cough every night.
+   first-2-sentences     : The smoke from the factory near Manali is choking us. Children cough every night.
+
+complaint 2: Air near the bus stand is terrible every morning. The dust and smoke make it hard to breathe. Please act soon.
+   frequent-words summary: Air near the bus stand is terrible every morning. The dust and smoke make it hard to breathe.
+   first-2-sentences     : Air near the bus stand is terrible every morning. The dust and smoke make it hard to breathe.
+
+complaint 11: The bus was not very good, smoke came from the engine. Passengers were coughing. It should not be on the road.
+   frequent-words summary: The bus was not very good, smoke came from the engine. It should not be on the road.
+   first-2-sentences     : The bus was not very good, smoke came from the engine. Passengers were coughing.
+
+complaint 25: No smoke today and the air is fresh. The factory has finally fixed its chimney. Good work by the board.
+   frequent-words summary: No smoke today and the air is fresh. The factory has finally fixed its chimney.
+   first-2-sentences     : No smoke today and the air is fresh. The factory has finally fixed its chimney.
+
+share of important-word mentions kept in the summary (higher = better):
+   frequent-words method : 0.990   (summary shorter than original for 31 complaints)
+   first-k method        : 0.973   (summary shorter than original for 31 complaints)
+
+time per complaint:  sentiment 5.0 us | summariser 7.9 us | first-k 2.3 us
+projected for 50,000 complaints a month: sentiment 0.25 s, summariser 0.39 s
+
+==========================================================================
+ALTERNATIVE: a trained model (naive Bayes, written by hand) - leave-one-out test
+==========================================================================
+naive Bayes leave-one-out accuracy on the same 54 complaints: 28 of 54 (51.9%)
+time per complaint: 23.2 us (lexicon scorer: 5.0 us)
+size of model: naive Bayes 6.0 KB vs word list 0.38 KB
+note: only 54 training examples, so this is a rough guide. A real model needs thousands of
+labelled complaints; a pre-trained language model would need hundreds of MB of memory.
+
+==========================================================================
+B4.2 INDEX ON (station, day) - 120 stations x one year = 1,051,200 rows
+==========================================================================
+rows: 1051200
+
+query: average PM2.5 of one station in October (20 different stations, averaged)
+plan without index: SCAN readings
+time per query WITHOUT index: 41.68 ms
+index built in 0.58 s, file grew from 41.6 MB to 73.3 MB
+plan with index   : SEARCH readings USING INDEX idx_station_day (station=? AND day>? AND day<?)
+time per query WITH index   : 0.079 ms
+speed-up: 527x   (same answers: True)
+
+load-everything-into-pandas then filter (A1.3 alternative): 2.52 s for ONE question,
+   memory used by the DataFrame: 141 MB
+
+trade-off: inserting 200,000 rows takes 0.31 s with the index and 0.17 s without it

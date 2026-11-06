@@ -1,0 +1,33 @@
+========================================================================
+B3.1 correctness on a small file (1 station, 3 days of hourly data)
+========================================================================
+station date            loops   pandas      sql  running
+Adyar   2025-01-01     54.321   54.321   54.321   54.321
+Adyar   2025-01-02     58.642   58.642   58.642   58.642
+Adyar   2025-01-03     57.317   57.317   57.317   57.317
+loops == pandas == sql == running sum: True
+
+========================================================================
+B3.2 time for 1, 12 and 120 stations (a year of hourly data each)
+========================================================================
+stations       rows |    loops   pandas  SQL load  SQL query  SQL total  running
+       1       8760 |   0.019s   0.008s    0.014s     0.003s     0.017s   0.017s
+      12     105120 |   0.242s   0.051s    0.138s     0.041s     0.178s   0.147s
+     120    1051200 |   2.465s   0.466s    1.274s     0.577s     1.850s   1.518s
+(all methods gave identical answers at every size)
+
+========================================================================
+B3.3 cProfile of the plain-Python version (12 stations)
+========================================================================
+         1399871 function calls in 0.652 seconds
+   Ordered by: internal time
+   List reduced from 43 to 8 due to restriction <8>
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+   105121    0.138    0.000    0.221    0.000 /usr/lib/python3.12/csv.py:112(__next__)
+     4380    0.071    0.000    0.303    0.000 /usr/lib/python3.12/statistics.py:154(_sum)
+        1    0.070    0.070    0.652    0.652 /home/claude/CSA08-REGNO-Assignment5/B3_Loops_vs_Libraries_vs_SQL/compare_methods.py:34(by_loops)
+   105122    0.042    0.000    0.043    0.000 {built-in method builtins.next}
+   105120    0.038    0.000    0.038    0.000 {method 'as_integer_ratio' of 'float' objects}
+    29874    0.032    0.000    0.043    0.000 /usr/lib/python3.12/fractions.py:186(__new__)
+   105120    0.027    0.000    0.064    0.000 /usr/lib/python3.12/statistics.py:287(_exact_ratio)
+    21114    0.026    0.000    0.047    0.000 /usr/lib/python3.12/fractions.py:710(_add)
