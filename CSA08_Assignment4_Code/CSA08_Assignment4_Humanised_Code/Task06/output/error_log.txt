@@ -1,0 +1,4 @@
+department_cse.txt, line 3: duplicate register 192311001
+department_it.txt, line 1: Invalid email address: charan.example.com
+department_it.txt, line 3: Expected 5 fields, found 1
+department_ece.txt: FileNotFoundError: [Errno 2] No such file or directory: '/mnt/data/CSA08_Assignment4_Humanised_Code/Task06/input/department_ece.txt'

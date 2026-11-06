@@ -1,0 +1,21 @@
+TASK 2.1 – DATA MODEL
+Each daily text file has one record per line: register number, date and P/A status. A dictionary stores each student's present and absent counts. The program creates a monthly CSV, a below-75% CSV and a damaged-line log.
+
+TASK 2.2 – FILE OPERATIONS
+Daily files are opened in r mode with UTF-8 encoding and read line by line. The reports are opened in w mode because they are freshly generated each time. The with statement closes each file automatically.
+
+TASK 2.3 – PSEUDOCODE
+1. List the daily text files in the month folder.
+2. Create an empty dictionary and damaged-line list.
+3. Open each file and read one line at a time.
+4. Split the line and check that it has three fields and P/A status.
+5. Record invalid lines with file name and line number.
+6. Update the student's present or absent count for valid lines.
+7. Calculate percentage = present / (present + absent) × 100.
+8. Write the monthly report, below-75% list and damaged-line log.
+
+TASK 2.4 – TRACE
+For the sample data, 192311001 has 2 present and 0 absent = 100%. 192311002 has 1 present and 1 absent = 50%. 192311003 has 1 present and 1 absent = 50%. The damaged fourth line in day1.txt is logged.
+
+ALTERNATIVE AND COMPLEXITY
+Re-reading all f files for each of s students and l lines per file takes O(s·f·l) time. Reading every file once and updating a dictionary takes O(f·l) average time. The dictionary uses O(s) counting space, plus space for damaged records.

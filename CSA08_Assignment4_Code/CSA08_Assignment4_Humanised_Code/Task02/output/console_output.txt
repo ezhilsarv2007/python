@@ -1,0 +1,6 @@
+Register Number,Present,Absent,Percentage
+192311001,2,0,100.00
+192311002,1,1,50.00
+192311003,1,1,50.00
+Students below 75%: 2
+Damaged lines: 1

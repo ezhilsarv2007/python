@@ -1,0 +1,3 @@
+192311003,Charan,IT,charan.example.com,Quiz
+192311004,Divya,IT,divya@example.com,Quiz;Music
+damaged registration row

@@ -1,0 +1,16 @@
+TASK 5.1 – FOUR CODE ORGANISATIONS
+A. One script: reading, calculations and report writing are all in main.py.
+B. One module: attendance_utils.py contains reusable functions, called by main.py.
+C. Three modules: reader.py, stats.py and report.py each handle one responsibility.
+D. Package: attendance/ contains __init__.py and the three modules.
+
+TASK 5.2 – NEW REQUIREMENT
+To add a report for students absent for three consecutive days, the single-script version changes one file. The one-module version normally changes attendance_utils.py and main.py. The three-module and package versions mainly change stats.py and report.py; main.py changes only if the call flow needs updating.
+
+TASK 5.3 – COMPARISON
+A single script is easiest to begin with but becomes difficult to maintain as it grows. One module supports reuse but may become large. Three modules separate responsibilities and make testing easier. A package gives a clear namespace and suits larger projects.
+
+`import attendance.stats` imports the module. `from attendance import stats` imports the submodule from the package. `from attendance.stats import calculate_percentages` imports the function directly.
+
+ALTERNATIVE
+A single script avoids organising code into imports but becomes harder to navigate. Package modules are loaded once and cached in sys.modules. The package uses memory for loaded module objects, but makes each responsibility easier to find and update.

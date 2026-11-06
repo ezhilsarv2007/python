@@ -1,0 +1,17 @@
+STAGE 1 – REQUIREMENTS
+Each department text file contains register number, name, department, email and semicolon-separated event names. Outputs are a master CSV, one participant file per event, a summary report and an error log. Valid registrations are accepted; duplicates and damaged rows are logged; a missing file does not stop the other files from being processed.
+
+STAGE 2 – PROCESSING FLOW
+Read each department file -> validate each row -> log invalid rows -> check whether the register number already exists -> save each unique student -> add the student to selected event lists -> write the master list, event files, summary and error log.
+
+STAGE 3 – DESIGN DECISIONS
+A dictionary stores students by register number, making duplicate checks O(1) on average. Email validation uses simple string methods: check for @, a dot in the domain part and that the address does not start with @. InvalidRegistration is raised by the validator and handled for each row. File errors are handled around each department file.
+
+STAGE 4 – PACKAGE
+reader.py reads files, validator.py checks records, process.py coordinates processing and output, and __init__.py marks the folder as a package.
+
+STAGE 5 – DEMONSTRATION
+The sample data contains a duplicate registration, an invalid email, a damaged row and a deliberately missing department file. Run main.py to create the output files.
+
+ALTERNATIVE AND COMPLEXITY
+Searching a list of earlier register numbers for every new row can take O(n²) time. A set or dictionary gives O(1) average membership checks and O(n) average total time. Both approaches use O(n) space for stored register numbers; the complete student and event data also requires O(n + event selections) space.

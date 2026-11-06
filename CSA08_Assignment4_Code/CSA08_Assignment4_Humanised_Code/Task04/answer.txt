@@ -1,0 +1,15 @@
+TASK 4.1 – DEFECTS
+Opening the log in w mode every day overwrites earlier entries; append mode a is needed. Missing newline characters can join book names. A manually opened file may remain open if an error occurs before close(). Handling only FileNotFoundError leaves other expected file errors unreported.
+
+TASK 4.2 – TEST
+The program processes three daily input files and one intentionally missing file. The returns.log contains the books from all three days. The missing file is recorded in error.log.
+
+TASK 4.3 – REPAIR
+The repaired version uses append mode, adds a newline after each book, uses with statements and records file errors.
+
+TASK 4.4 – PREVENTION RULES
+1. Use with whenever opening a file so it closes automatically.
+2. Choose the correct file mode and add separators such as newline characters between records.
+
+ALTERNATIVE
+Manual open/close can be made safe with try/finally, where close() runs in finally. Complexity does not change. A correct finally block can close the file, but with is simpler and handles cleanup automatically.

@@ -1,0 +1,3 @@
+Unique registrations: 3
+Events: Dance, Drama, Music, Quiz
+Errors recorded: 4

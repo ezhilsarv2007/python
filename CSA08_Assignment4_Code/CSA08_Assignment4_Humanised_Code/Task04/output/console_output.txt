@@ -1,0 +1,11 @@
+Could not process: missing_day.txt
+Returned books:
+Book A
+Book B
+Book C
+Book D
+Book E
+
+Error log:
+missing_day.txt: FileNotFoundError: [Errno 2] No such file or directory: '/mnt/data/CSA08_Assignment4_Humanised_Code/Task04/input/missing_day.txt'
+

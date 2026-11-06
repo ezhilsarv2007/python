@@ -1,0 +1,20 @@
+TASK 3.1 – POSSIBLE FAILURES
+- Missing folder or file: FileNotFoundError.
+- Permission denied: PermissionError.
+- Wrong text encoding: UnicodeDecodeError.
+- Wrong number of fields or invalid P/A status: custom InvalidRecord.
+- Invalid number conversion: ValueError.
+- Accessing a missing list position: IndexError.
+- Empty file: it normally raises no exception; it simply produces zero counts.
+
+TASK 3.2 – CUSTOM EXCEPTION
+InvalidRecord is raised in parse_line() when a line does not contain exactly three fields or the status is not P/A. It is handled inside the line-processing loop, so other lines can still be processed.
+
+TASK 3.3 – COMPLETE TRY STATEMENT
+The program uses try, specific except clauses, else after successful processing and finally for a message that runs either way. `raise RuntimeError(...) from error` preserves the original exception as the cause.
+
+TASK 3.4 – MISUSE EXPERIMENT
+If every error is caught using `except Exception: pass`, even a typing mistake such as a misspelled variable can be hidden. The program may finish with incomplete totals and no useful explanation. Specific exception handling is safer.
+
+ALTERNATIVE
+Validation with if statements can check a row before processing it. Both methods take O(n) time for n lines. Exceptions are convenient for rare bad rows; normal if checks may be clearer when invalid rows are common.

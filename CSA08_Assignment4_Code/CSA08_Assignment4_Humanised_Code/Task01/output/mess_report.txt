@@ -1,0 +1,6 @@
+192311001 - Anitha: Rs. 1250.50
+192311002 - Bala: Rs. 980.00
+192311003 - Charan: Rs. 1100.75
+192311004 - Divya: Rs. 875.00
+
+Total mess bill: Rs. 4206.25

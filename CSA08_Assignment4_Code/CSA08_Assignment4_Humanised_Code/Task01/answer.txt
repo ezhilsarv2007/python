@@ -1,0 +1,15 @@
+TASK 1.1 – DESIGN DEFICIENCIES
+1. The hard-coded path may not exist on another computer, so the file cannot be opened.
+2. The original file is not closed explicitly. This can waste system resources.
+3. read() loads the complete file into memory. A large file needs more memory.
+4. A bare except hides every error, including unexpected programming mistakes.
+5. int() rejects amounts containing paise, such as 1250.50. float() is suitable here.
+6. Repeated string concatenation creates unnecessary temporary strings; a list is easier to maintain.
+7. A final blank line can be mistaken for a record and cause indexing errors.
+8. Rejected records are not saved, so office staff cannot check incorrect bills.
+
+TASK 1.3 – DESIGN DEFENCE
+The repaired program reads one line at a time, closes the file automatically with with, handles expected errors and saves rejected records with their line numbers. Its function accepts a file name, so it can be reused. For 50,000 lines, line-by-line reading avoids storing the whole input file in memory.
+
+ALTERNATIVE AND COMPLEXITY
+Both read() and line iteration take O(n) time for n characters/records. read() or readlines() stores O(file size) input data, while iteration needs about O(one line) input memory, apart from the report and rejected-record lists.
