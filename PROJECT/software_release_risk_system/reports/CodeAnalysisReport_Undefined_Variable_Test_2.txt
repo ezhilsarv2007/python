@@ -1,0 +1,60 @@
+================================================================================
+           STATIC CODE ANALYSIS & RELEASE RISK ASSESSMENT REPORT
+================================================================================
+Project Name        : Undefined Variable Test
+Upload Type         : Individual Code File
+Source Filename     : calculator.py
+Assessment Timestamp: 2026-11-16 19:28:16
+Analysis ID         : #2
+--------------------------------------------------------------------------------
+
+1. EXECUTIVE SUMMARY & RISK CLASSIFICATION
+--------------------------------------------------------------------------------
+  Overall Release Risk Score : 6.9 / 100
+  Risk Category              : LOW RISK
+  Overall Code Quality       : Average
+--------------------------------------------------------------------------------
+
+2. ANALYSIS SUMMARY METRICS
+--------------------------------------------------------------------------------
+  - Total Files Uploaded     : 1
+  - Total Files Analysed     : 1
+  - Total Errors Detected    : 1
+  - Total Warnings           : 1
+  - Critical Issues (Blockers): 0
+  - Security Findings        : 0
+
+3. PARAMETER RISK BREAKDOWN
+--------------------------------------------------------------------------------
+Parameter                | Raw Value       | Sub-Score    | Weight   | Contribution
+--------------------------------------------------------------------------------
+Critical Blockers        | 0 blockers      | 0.00         | 20%      | 0.00
+Security Issues          | 0 issues        | 0.00         | 20%      | 0.00
+Test Completion          | 85.0%           | 15.00        | 15%      | 2.25
+Unresolved Bugs          | 1 bugs          | 6.00         | 15%      | 0.90
+Modified Files           | 1 files         | 2.50         | 10%      | 0.25
+Performance Status       | Good            | 0.00         | 8%       | 0.00
+Code Quality             | Average         | 50.00        | 7%       | 3.50
+Documentation            | Complete        | 0.00         | 5%       | 0.00
+--------------------------------------------------------------------------------
+TOTAL RISK SCORE                                                | 6.90 / 100
+
+4. DETECTED ISSUES & CORRECTION GUIDELINES
+--------------------------------------------------------------------------------
+  [1] calculator.py (Line 4) - [HIGH] Undefined Variable
+      Description : Undefined variable or symbol 'unknown_tax_rate'.
+      Suggested   : Define or import 'unknown_tax_rate' before accessing it to prevent runtime NameError.
+
+  [2] calculator.py (Line 1) - [LOW] Unused Import
+      Description : Imported module or symbol 'os' is unused.
+      Suggested   : Remove 'import os' to declutter namespace and optimize startup.
+
+5. ACTIONABLE RECOMMENDATIONS
+--------------------------------------------------------------------------------
+  (1) Resolve undefined variable reference in 'calculator.py' (line 4) to prevent runtime crashes.
+  (2) Clean up 1 unused import/variable declaration(s) across analysed files to improve maintainability.
+
+================================================================================
+Report generated automatically by Software Release Risk Scoring System
+Static Code Analysis & Release Quality Assessment Engine
+================================================================================

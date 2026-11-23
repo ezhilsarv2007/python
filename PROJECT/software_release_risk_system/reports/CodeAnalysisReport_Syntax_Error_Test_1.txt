@@ -1,0 +1,57 @@
+================================================================================
+           STATIC CODE ANALYSIS & RELEASE RISK ASSESSMENT REPORT
+================================================================================
+Project Name        : Syntax Error Test
+Upload Type         : Individual Code File
+Source Filename     : test_syntax.py
+Assessment Timestamp: 2026-11-16 19:28:16
+Analysis ID         : #1
+--------------------------------------------------------------------------------
+
+1. EXECUTIVE SUMMARY & RISK CLASSIFICATION
+--------------------------------------------------------------------------------
+  Overall Release Risk Score : 25.0 / 100
+  Risk Category              : LOW RISK
+  Overall Code Quality       : Poor
+--------------------------------------------------------------------------------
+
+2. ANALYSIS SUMMARY METRICS
+--------------------------------------------------------------------------------
+  - Total Files Uploaded     : 1
+  - Total Files Analysed     : 1
+  - Total Errors Detected    : 1
+  - Total Warnings           : 0
+  - Critical Issues (Blockers): 1
+  - Security Findings        : 0
+
+3. PARAMETER RISK BREAKDOWN
+--------------------------------------------------------------------------------
+Parameter                | Raw Value       | Sub-Score    | Weight   | Contribution
+--------------------------------------------------------------------------------
+Critical Blockers        | 1 blockers      | 50.00        | 20%      | 10.00
+Security Issues          | 0 issues        | 0.00         | 20%      | 0.00
+Test Completion          | 75.0%           | 25.00        | 15%      | 3.75
+Unresolved Bugs          | 0 bugs          | 0.00         | 15%      | 0.00
+Modified Files           | 1 files         | 2.50         | 10%      | 0.25
+Performance Status       | Average         | 50.00        | 8%       | 4.00
+Code Quality             | Poor            | 100.00       | 7%       | 7.00
+Documentation            | Complete        | 0.00         | 5%       | 0.00
+--------------------------------------------------------------------------------
+TOTAL RISK SCORE                                                | 25.00 / 100
+
+4. DETECTED ISSUES & CORRECTION GUIDELINES
+--------------------------------------------------------------------------------
+  [1] test_syntax.py (Line 1) - [CRITICAL] Syntax Error
+      Description : Syntax error: invalid syntax
+      Suggested   : Correct the syntax error near line 1. Ensure brackets, quotes, and colons are properly matched.
+
+5. ACTIONABLE RECOMMENDATIONS
+--------------------------------------------------------------------------------
+  (1) Fix critical syntax error in 'test_syntax.py' at line 1 before attempting build or release.
+  (2) Current automated test completion is 75.0%. Run additional unit tests to raise coverage to at least 85%.
+  (3) Overall code quality is Poor; conduct peer code reviews to pay down technical debt.
+
+================================================================================
+Report generated automatically by Software Release Risk Scoring System
+Static Code Analysis & Release Quality Assessment Engine
+================================================================================

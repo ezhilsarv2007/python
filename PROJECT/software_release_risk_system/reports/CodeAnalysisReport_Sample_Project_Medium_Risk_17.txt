@@ -1,0 +1,83 @@
+================================================================================
+           STATIC CODE ANALYSIS & RELEASE RISK ASSESSMENT REPORT
+================================================================================
+Project Name        : Sample Project Medium Risk
+Upload Type         : Complete Project (ZIP Archive)
+Source Filename     : sample_project_medium_risk.zip
+Assessment Timestamp: 2026-11-16 20:43:25
+Analysis ID         : #17
+--------------------------------------------------------------------------------
+
+1. EXECUTIVE SUMMARY & RISK CLASSIFICATION
+--------------------------------------------------------------------------------
+  Overall Release Risk Score : 4.9 / 100
+  Risk Category              : LOW RISK
+  Overall Code Quality       : Good
+--------------------------------------------------------------------------------
+
+2. ANALYSIS SUMMARY METRICS
+--------------------------------------------------------------------------------
+  - Total Files Uploaded     : 4
+  - Total Files Analysed     : 4
+  - Total Errors Detected    : 0
+  - Total Warnings           : 8
+  - Critical Issues (Blockers): 0
+  - Security Findings        : 0
+
+3. PARAMETER RISK BREAKDOWN
+--------------------------------------------------------------------------------
+Parameter                | Raw Value       | Sub-Score    | Weight   | Contribution
+--------------------------------------------------------------------------------
+Critical Blockers        | 0 blockers      | 0.00         | 20%      | 0.00
+Security Issues          | 0 issues        | 0.00         | 20%      | 0.00
+Test Completion          | 80.0%           | 20.00        | 15%      | 3.00
+Unresolved Bugs          | 1 bugs          | 6.00         | 15%      | 0.90
+Modified Files           | 4 files         | 10.00        | 10%      | 1.00
+Performance Status       | Good            | 0.00         | 8%       | 0.00
+Code Quality             | Good            | 0.00         | 7%       | 0.00
+Documentation            | Complete        | 0.00         | 5%       | 0.00
+--------------------------------------------------------------------------------
+TOTAL RISK SCORE                                                | 4.90 / 100
+
+4. DETECTED ISSUES & CORRECTION GUIDELINES
+--------------------------------------------------------------------------------
+  [1] src/analytics.py (Line 6) - [LOW] Unused Variable
+      Description : Local variable 'var_unused' is assigned but never used.
+      Suggested   : Remove unused variable or prefix with an underscore if required by convention.
+
+  [2] src/analytics.py (Line 1) - [LOW] Unused Import
+      Description : Imported module or symbol 'os' is unused.
+      Suggested   : Remove 'import os' to declutter namespace and optimize startup.
+
+  [3] src/analytics.py (Line 2) - [LOW] Unused Import
+      Description : Imported module or symbol 'sys' is unused.
+      Suggested   : Remove 'import sys' to declutter namespace and optimize startup.
+
+  [4] src/analytics.py (Line 3) - [LOW] Unused Import
+      Description : Imported module or symbol 'math' is unused.
+      Suggested   : Remove 'import math' to declutter namespace and optimize startup.
+
+  [5] src/web/client.js (Line 2) - [LOW] Best Practice
+      Description : Use of legacy 'var' declaration.
+      Suggested   : Replace 'var' with block-scoped 'let' or 'const'.
+
+  [6] src/web/client.js (Line 5) - [MEDIUM] Code Smell
+      Description : Leftover 'debugger;' breakpoint statement.
+      Suggested   : Remove debugger statements before releasing to production.
+
+  [7] templates/dashboard.html (Line 5) - [LOW] Accessibility (a11y)
+      Description : Image tag missing 'alt' attribute.
+      Suggested   : Provide descriptive 'alt' attribute text for screen readers and SEO.
+
+  [8] templates/dashboard.html (Line 6) - [MEDIUM] CSP & Maintenance Smell
+      Description : Inline JavaScript event handler detected in HTML markup.
+      Suggested   : Attach event listeners unobtrusively using JavaScript 'addEventListener()'.
+
+5. ACTIONABLE RECOMMENDATIONS
+--------------------------------------------------------------------------------
+  (1) Clean up 4 unused import/variable declaration(s) across analysed files to improve maintainability.
+
+================================================================================
+Report generated automatically by Software Release Risk Scoring System
+Static Code Analysis & Release Quality Assessment Engine
+================================================================================

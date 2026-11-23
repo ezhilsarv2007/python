@@ -1,0 +1,158 @@
+{% extends "base.html" %}
+
+{% block title %}Assessment Result - {{ assessment.project_name }} - SRRSS{% endblock %}
+
+{% block content %}
+<div class="container result-container">
+    <!-- Header Summary Card -->
+    <div class="card result-header-card">
+        <div class="header-left">
+            <span class="tag">Release Assessment Summary</span>
+            <h1 class="project-title">{{ assessment.project_name }}</h1>
+            <p class="project-meta">
+                <strong>Release Version:</strong> {{ assessment.version }} &nbsp;|&nbsp; 
+                <strong>Assessed On:</strong> {{ assessment.timestamp }} &nbsp;|&nbsp;
+                <strong>Assessment ID:</strong> #{{ assessment.id }}
+            </p>
+        </div>
+        <div class="header-actions">
+            {% if report_filename %}
+            <a href="{{ url_for('download_report', filename=report_filename) }}" class="btn btn-download">
+                &#128190; Download Report (.txt)
+            </a>
+            {% endif %}
+            <a href="{{ url_for('assessment_form') }}" class="btn btn-outline">New Assessment</a>
+        </div>
+    </div>
+
+    <!-- Overall Risk Gauge & Score Card -->
+    <div class="card score-overview-card">
+        <div class="score-grid">
+            <!-- Numerical Score Block -->
+            <div class="score-block">
+                <span class="score-label">OVERALL RISK SCORE</span>
+                <div class="score-number-wrapper">
+                    <span class="score-big {{ results.badge_class }}-text">{{ results.overall_score }}</span>
+                    <span class="score-denom">/ 100</span>
+                </div>
+                <div class="score-classification">
+                    <span class="badge {{ results.badge_class }}">{{ results.risk_category }}</span>
+                </div>
+            </div>
+
+            <!-- Visual Progress Meter & Thresholds -->
+            <div class="meter-block">
+                <span class="meter-title">Risk Level Spectrum</span>
+                <div class="progress-bar-container">
+                    <div class="progress-bar-fill {{ results.badge_class }}-bg" style="width: {{ results.overall_score }}%;"></div>
+                </div>
+
+                <!-- Risk Threshold Markers -->
+                <div class="threshold-markers">
+                    <div class="marker-item marker-low">
+                        <span class="dot dot-low"></span>
+                        <span class="label">Low Risk (0 - 30)</span>
+                    </div>
+                    <div class="marker-item marker-med">
+                        <span class="dot dot-med"></span>
+                        <span class="label">Medium Risk (31 - 60)</span>
+                    </div>
+                    <div class="marker-item marker-high">
+                        <span class="dot dot-high"></span>
+                        <span class="label">High Risk (61 - 100)</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Issues and Recommendations Grid -->
+    <div class="grid-2col mt-4">
+        <!-- Identified Issues Card -->
+        <div class="card">
+            <h2 class="card-title">&#9888; Summary of Identified Issues</h2>
+            <p class="text-muted">Key risk drivers identified based on submitted parameters:</p>
+            <ul class="issues-list">
+                {% for issue in results.issues %}
+                    <li class="issue-item">
+                        <span class="issue-bullet">&bull;</span>
+                        <span class="issue-text">{{ issue }}</span>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <!-- Recommendations Card -->
+        <div class="card">
+            <h2 class="card-title">&#10004; Release Recommendations</h2>
+            <p class="text-muted">Action plan based on the <strong>{{ results.risk_category }}</strong> classification:</p>
+            <div class="recommendations-box rec-{{ results.badge_class }}">
+                <ol class="styled-numbered-list">
+                    {% for rec in results.recommendations %}
+                        <li>{{ rec }}</li>
+                    {% endfor %}
+                </ol>
+            </div>
+        </div>
+    </div>
+
+    <!-- Visual Representation: Parameter Contribution Chart & Table -->
+    <div class="card mt-4">
+        <h2 class="card-title">&#128202; Individual Parameter Risk Contributions</h2>
+        <p class="text-muted">Breakdown showing each parameter's sub-score and its final weighted point contribution towards the 100-point scale:</p>
+        
+        <!-- Chart.js Visual Bar Chart Container -->
+        <div class="chart-wrapper">
+            <canvas id="riskContributionChart" height="90"></canvas>
+        </div>
+
+        <!-- Breakdown Table -->
+        <div class="table-responsive mt-3">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Quality Parameter</th>
+                        <th>Entered Value</th>
+                        <th>Raw Sub-Score (0–100)</th>
+                        <th>Assigned Weight</th>
+                        <th>Risk Contribution (Points)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in results.breakdown %}
+                    <tr>
+                        <td><strong>{{ item.name }}</strong></td>
+                        <td>{{ item.raw_value }}</td>
+                        <td>{{ item.sub_score }}</td>
+                        <td>{{ item.weight }}</td>
+                        <td><strong>{{ item.weighted_score }}</strong> pts</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+                <tfoot>
+                    <tr class="table-total-row">
+                        <td colspan="4" class="text-right"><strong>Total Weighted Risk Score:</strong></td>
+                        <td><strong class="{{ results.badge_class }}-text">{{ results.overall_score }} / 100</strong></td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+
+    <!-- Navigation & History Actions -->
+    <div class="bottom-actions mt-4 text-center">
+        <a href="{{ url_for('assessment_form') }}" class="btn btn-primary">Start Another Assessment</a>
+        <a href="{{ url_for('history') }}" class="btn btn-outline">View Assessment History</a>
+        <a href="{{ url_for('index') }}" class="btn btn-secondary">Back to Home</a>
+    </div>
+</div>
+
+<!-- Embedded JSON Data for Chart.js Rendering -->
+<script>
+    window.riskBreakdownData = {
+        labels: [{% for item in results.breakdown %}"{{ item.name }}",{% endfor %}],
+        contributions: [{% for item in results.breakdown %}{{ item.weighted_score }},{% endfor %}],
+        subScores: [{% for item in results.breakdown %}{{ item.sub_score }},{% endfor %}]
+    };
+</script>
+{% endblock %}

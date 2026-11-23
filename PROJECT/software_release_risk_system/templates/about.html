@@ -1,0 +1,177 @@
+{% extends "base.html" %}
+
+{% block title %}About Project - SRRSS{% endblock %}
+
+{% block content %}
+<div class="container about-container">
+    <div class="page-header">
+        <h1 class="page-title">About the Project</h1>
+        <p class="page-subtitle">Software Release Risk Scoring System – A Python-Based Approach for Assessing Software Release Risks</p>
+    </div>
+
+    <!-- Project Overview -->
+    <div class="card mb-4">
+        <h2 class="card-title">1. Project Overview</h2>
+        <p>
+            The <strong>Software Release Risk Scoring System (SRRSS)</strong> is an academic engineering project developed using Python, Flask, and SQLite. 
+            It is designed to solve a fundamental challenge in the software engineering lifecycle (SDLC): evaluating whether a planned software build is sufficiently stable, verified, and safe to deploy into a production environment.
+        </p>
+        <p>
+            The system provides two powerful assessment pathways:
+        </p>
+        <ul class="styled-list">
+            <li><strong>Static Code &amp; Project Upload Analysis:</strong> Developers can upload complete project repositories (.zip) or individual source files (.py, .js, .ts, .java, .c, .cpp, .html, .css). Real static code analyzers (Python AST, Pyflakes, and Bandit-equivalent security rules) inspect the code without execution, detecting syntax errors, undefined variables, buffer overflows, and security vulnerabilities.</li>
+            <li><strong>Manual Quality Parameter Assessment:</strong> Teams can evaluate 8 high-level software quality dimensions (unresolved bugs, blockers, code churn, test completion, performance, code quality, security, and documentation) with predefined weighted scoring.</li>
+        </ul>
+    </div>
+
+    <!-- Static Code Analysis Engine Description -->
+    <div class="card mb-4">
+        <h2 class="card-title">2. Static Code Analysis Architecture</h2>
+        <p>
+            The static analysis engine inspects code structure and patterns safely without running or installing arbitrary third-party packages:
+        </p>
+        <div class="tech-grid">
+            <div class="tech-card">
+                <h4>Python (.py) Analysis</h4>
+                <p>Uses Python's standard library <code>ast</code> parser to verify syntax integrity, <code>pyflakes</code> to detect undefined names and unused imports, and security visitors to flag <code>eval()</code>, <code>exec()</code>, <code>shell=True</code>, weak hashes, and hardcoded secrets.</p>
+            </div>
+            <div class="tech-card">
+                <h4>JavaScript / TypeScript (.js, .ts)</h4>
+                <p>Inspects bracket and brace balance, flags dangerous <code>eval()</code>, XSS vulnerabilities via <code>innerHTML</code>, leftover <code>debugger;</code> statements, and hardcoded tokens.</p>
+            </div>
+            <div class="tech-card">
+                <h4>Java (.java)</h4>
+                <p>Checks class and method brace integrity, flags swallowed empty <code>catch</code> blocks, deprecated <code>Thread.stop()</code>, and unclosed I/O streams.</p>
+            </div>
+            <div class="tech-card">
+                <h4>C / C++ (.c, .cpp, .h)</h4>
+                <p>Identifies dangerous C11-obsolete functions like <code>gets()</code>, unbounded string operations (<code>strcpy()</code>, <code>strcat()</code>, <code>sprintf()</code>), and missing header include guards.</p>
+            </div>
+            <div class="tech-card">
+                <h4>HTML Markup (.html, .htm)</h4>
+                <p>Audits standard compliance (<code>&lt;!DOCTYPE html&gt;</code>), detects inline script event handlers (CSP hazards), missing image <code>alt</code> attributes, and deprecated presentation tags.</p>
+            </div>
+            <div class="tech-card">
+                <h4>CSS Stylesheets (.css)</h4>
+                <p>Checks CSS declaration block balance, flags overuse of <code>!important</code> that breaks specificity, and detects empty dead-code rulesets.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Working Methodology & Mathematical Scoring Model -->
+    <div class="card mb-4">
+        <h2 class="card-title">3. Working Methodology &amp; Mathematical Scoring Model</h2>
+        <p>
+            The risk engine computes the overall release risk score using a linear weighted aggregation model. 
+            Each parameter \(i\) produces a normalized sub-score \(S_i \in [0, 100]\), which is multiplied by its predetermined weight \(W_i\). 
+            The sum of all weights equals 1.0 (100%):
+        </p>
+
+        <div class="math-box">
+            <code>Total Risk Score = &sum; (SubScore<sub>i</sub> &times; Weight<sub>i</sub>)</code>
+        </div>
+
+        <div class="table-responsive mt-3">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Parameter</th>
+                        <th>Assigned Weight</th>
+                        <th>Scoring Logic</th>
+                        <th>Rationale</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Critical Blockers</strong></td>
+                        <td>20% (0.20)</td>
+                        <td>0=0, 1=50, 2=80, 3+=100 pts</td>
+                        <td>Syntax errors and critical vulnerabilities will halt execution in production.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Security Issues</strong></td>
+                        <td>20% (0.20)</td>
+                        <td>0=0, 1=40, 2=70, 3+=100 pts</td>
+                        <td>Security flaws expose applications to breaches, injection, and compliance failure.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Test Completion</strong></td>
+                        <td>15% (0.15)</td>
+                        <td>Risk = 100 - Completion %</td>
+                        <td>Unexecuted tests conceal regression bugs across untouched modules.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Unresolved Bugs</strong></td>
+                        <td>15% (0.15)</td>
+                        <td>min(Bugs &times; 6, 100 pts)</td>
+                        <td>High defect volume degrades user experience and product reliability.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Modified Code Files</strong></td>
+                        <td>10% (0.10)</td>
+                        <td>min(Files &times; 2.5, 100 pts)</td>
+                        <td>Substantial code churn raises the likelihood of unintended side-effects.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Performance Status</strong></td>
+                        <td>8% (0.08)</td>
+                        <td>Good=0, Average=50, Poor=100</td>
+                        <td>High latency and throughput bottlenecks impact production scale.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Code Quality</strong></td>
+                        <td>7% (0.07)</td>
+                        <td>Good=0, Average=50, Poor=100</td>
+                        <td>Poor maintainability and high complexity impede rapid bug fixing.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Documentation Status</strong></td>
+                        <td>5% (0.05)</td>
+                        <td>Complete=0, Incomplete=100</td>
+                        <td>Missing runbooks or release notes impede deployment and incident recovery.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h3 class="mt-3">Risk Classification Thresholds:</h3>
+        <ul class="styled-list">
+            <li><strong>0 – 30 (LOW RISK):</strong> Safe to proceed with release following standard automated sanity verification.</li>
+            <li><strong>31 – 60 (MEDIUM RISK):</strong> Conditional release. Requires resolution of pending bugs and QA lead sign-off.</li>
+            <li><strong>61 – 100 (HIGH RISK):</strong> Release blocked. Immediate deployment must be aborted until critical blockers and vulnerabilities are resolved.</li>
+        </ul>
+    </div>
+
+    <!-- Technologies Used -->
+    <div class="card mb-4">
+        <h2 class="card-title">4. Technologies Used</h2>
+        <div class="tech-grid">
+            <div class="tech-card">
+                <h4>Python &amp; AST</h4>
+                <p>Powers backend parsing, Abstract Syntax Tree inspection, file handling, and math algorithms.</p>
+            </div>
+            <div class="tech-card">
+                <h4>Pyflakes &amp; Bandit</h4>
+                <p>Performs linter checks for undefined names and security checks for unsafe operations.</p>
+            </div>
+            <div class="tech-card">
+                <h4>Flask (Web Framework)</h4>
+                <p>Handles routing, multipart file uploads, session messages, and template rendering.</p>
+            </div>
+            <div class="tech-card">
+                <h4>SQLite (Database)</h4>
+                <p>Relational database engine with tables for manual assessments and code analysis logs.</p>
+            </div>
+            <div class="tech-card">
+                <h4>ZipFile &amp; Safe Extraction</h4>
+                <p>Extracts project archives safely with Zip Slip path traversal defenses and size guards.</p>
+            </div>
+            <div class="tech-card">
+                <h4>HTML5, CSS3 &amp; Chart.js</h4>
+                <p>Clean, student-oriented styling, responsive tables, and interactive risk progress meters.</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,119 @@
+{% extends "base.html" %}
+
+{% block title %}Home - Software Release Risk Scoring System{% endblock %}
+
+{% block content %}
+<div class="container">
+    <!-- Hero / Introduction Section -->
+    <section class="hero-card">
+        <span class="tag">Academic Project &bull; B.Tech / BE</span>
+        <h1 class="hero-title">Software Release Risk Scoring System</h1>
+        <p class="hero-subtitle">A Python-Based Approach for Assessing Software Release Risks Prior to Deployment</p>
+        <p class="hero-desc">
+            In modern software engineering, deploying new releases into production environments without prior risk analysis 
+            frequently causes downtime, regressions, and critical failures. This system performs <strong>automated static code analysis</strong> 
+            on uploaded projects or individual files, evaluates software quality parameters, computes a deterministic weighted risk score, 
+            classifies the release risk, and provides concrete actionable recommendations.
+        </p>
+        <div class="hero-actions">
+            <a href="{{ url_for('upload_page') }}" class="btn btn-primary btn-lg">&#128229; Upload &amp; Analyse Code</a>
+            <a href="{{ url_for('assessment_form') }}" class="btn btn-outline btn-lg">&#9998; Manual Risk Assessment</a>
+            <a href="{{ url_for('history') }}" class="btn btn-secondary btn-lg">&#128203; View History</a>
+        </div>
+    </section>
+
+    <!-- Two Main Assessment Pathways Grid -->
+    <div class="grid-2col mb-4">
+        <!-- Pathway 1: Code Upload & Static Analysis -->
+        <div class="card card-highlight">
+            <div class="d-flex align-center gap-2 mb-2">
+                <span class="pathway-icon">&#128187;</span>
+                <h2 class="card-title" style="margin-bottom:0; border-bottom:none;">Automated Code Analysis</h2>
+            </div>
+            <p>
+                Upload your source code for non-executing static analysis across multiple languages:
+            </p>
+            <ul class="styled-list">
+                <li><strong>Option 1 (Complete Project ZIP):</strong> Unpack archive safely, ignore build folders (<code>node_modules</code>, <code>.git</code>, virtualenvs), and scan all source files.</li>
+                <li><strong>Option 2 (Individual File):</strong> Inspect Python, Java, C, C++, JavaScript, TypeScript, HTML, or CSS files.</li>
+                <li><strong>Static Checkers:</strong> Python AST for syntax errors, Pyflakes for undefined symbols, and Bandit security rules.</li>
+                <li><strong>Line-by-Line Inspection:</strong> Displays exact line numbers, severity tags, and suggested corrections.</li>
+            </ul>
+            <div class="mt-3">
+                <a href="{{ url_for('upload_page') }}" class="btn btn-primary btn-sm">Upload Project / Files &rarr;</a>
+            </div>
+        </div>
+
+        <!-- Pathway 2: Manual Metric Assessment -->
+        <div class="card">
+            <div class="d-flex align-center gap-2 mb-2">
+                <span class="pathway-icon">&#128202;</span>
+                <h2 class="card-title" style="margin-bottom:0; border-bottom:none;">Parameter Risk Assessment</h2>
+            </div>
+            <p>
+                Evaluate pre-deployment readiness based on 8 core software quality parameters:
+            </p>
+            <ul class="styled-list">
+                <li><strong>Defect Metrics:</strong> Unresolved bugs and critical deployment blockers.</li>
+                <li><strong>Codebase Churn:</strong> Volume of modified source files.</li>
+                <li><strong>Verification Coverage:</strong> Test completion percentage (0–100%).</li>
+                <li><strong>Reliability &amp; Readiness:</strong> Performance benchmarks, code quality rating, and release documentation.</li>
+                <li><strong>Quick Scenario Fill:</strong> Built-in one-click presets for Low, Medium, and High risk demonstrations.</li>
+            </ul>
+            <div class="mt-3">
+                <a href="{{ url_for('assessment_form') }}" class="btn btn-outline btn-sm">Run Manual Assessment &rarr;</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Importance Grid -->
+    <div class="grid-2col">
+        <div class="card">
+            <h2 class="card-title">Project Purpose</h2>
+            <p>
+                The primary objective is to eliminate subjective release decisions by providing an objective, mathematical risk framework:
+            </p>
+            <ul class="styled-list">
+                <li><strong>Transparent Mathematical Model:</strong> Linear weighted scoring ensures predictable, auditable calculations.</li>
+                <li><strong>Multi-Dimensional Risk:</strong> Evaluates syntax integrity, vulnerabilities, testing coverage, and code churn.</li>
+                <li><strong>Actionable Feedback:</strong> Directly advises developers on lines and files needing remediation.</li>
+            </ul>
+        </div>
+
+        <div class="card">
+            <h2 class="card-title">Why Release Risk Assessment Matters</h2>
+            <p>
+                Production deployments directly impact customer trust, business revenue, and security:
+            </p>
+            <ul class="styled-list">
+                <li><strong>Prevents Outages:</strong> Identifies syntax blockers, unclosed sockets, and undefined variables before runtime.</li>
+                <li><strong>Reduces Rollbacks:</strong> Eliminates high-cost emergency hotfixing by catching regressions early.</li>
+                <li><strong>Security Hardening:</strong> Flags command injection (shell=True), eval(), gets(), and hardcoded secrets.</li>
+                <li><strong>Persistent Auditing:</strong> Logs historical assessments into SQLite and generates downloadable text reports.</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- How the Application Works Section -->
+    <section class="section-card mt-4">
+        <h2 class="section-heading">How the System Works</h2>
+        <div class="grid-3col">
+            <div class="step-card">
+                <div class="step-number">1</div>
+                <h3>Submit Code or Metrics</h3>
+                <p>Upload a project ZIP, an individual source file, or enter release parameters into the assessment form.</p>
+            </div>
+            <div class="step-card">
+                <div class="step-number">2</div>
+                <h3>Deterministic Risk Engine</h3>
+                <p>Static analyzers detect defects and apply predefined weights (20% blockers, 20% security, 15% testing, etc.).</p>
+            </div>
+            <div class="step-card">
+                <div class="step-number">3</div>
+                <h3>Dashboard &amp; Report</h3>
+                <p>Review the 0–100 risk score, category (Low, Med, High), file-by-file issues, and download the full text report.</p>
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock %}

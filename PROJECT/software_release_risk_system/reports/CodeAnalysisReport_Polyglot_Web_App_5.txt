@@ -1,0 +1,79 @@
+================================================================================
+           STATIC CODE ANALYSIS & RELEASE RISK ASSESSMENT REPORT
+================================================================================
+Project Name        : Polyglot Web App
+Upload Type         : Complete Project (ZIP Archive)
+Source Filename     : polyglot.zip
+Assessment Timestamp: 2026-11-16 19:28:16
+Analysis ID         : #5
+--------------------------------------------------------------------------------
+
+1. EXECUTIVE SUMMARY & RISK CLASSIFICATION
+--------------------------------------------------------------------------------
+  Overall Release Risk Score : 42.25 / 100
+  Risk Category              : MEDIUM RISK
+  Overall Code Quality       : Poor
+--------------------------------------------------------------------------------
+
+2. ANALYSIS SUMMARY METRICS
+--------------------------------------------------------------------------------
+  - Total Files Uploaded     : 5
+  - Total Files Analysed     : 5
+  - Total Errors Detected    : 2
+  - Total Warnings           : 4
+  - Critical Issues (Blockers): 1
+  - Security Findings        : 2
+
+3. PARAMETER RISK BREAKDOWN
+--------------------------------------------------------------------------------
+Parameter                | Raw Value       | Sub-Score    | Weight   | Contribution
+--------------------------------------------------------------------------------
+Critical Blockers        | 1 blockers      | 50.00        | 20%      | 10.00
+Security Issues          | 2 issues        | 70.00        | 20%      | 14.00
+Test Completion          | 60.0%           | 40.00        | 15%      | 6.00
+Unresolved Bugs          | 0 bugs          | 0.00         | 15%      | 0.00
+Modified Files           | 5 files         | 12.50        | 10%      | 1.25
+Performance Status       | Average         | 50.00        | 8%       | 4.00
+Code Quality             | Poor            | 100.00       | 7%       | 7.00
+Documentation            | Complete        | 0.00         | 5%       | 0.00
+--------------------------------------------------------------------------------
+TOTAL RISK SCORE                                                | 42.25 / 100
+
+4. DETECTED ISSUES & CORRECTION GUIDELINES
+--------------------------------------------------------------------------------
+  [1] native/buffer.c (Line 4) - [CRITICAL] Critical Buffer Overflow
+      Description : Use of dangerous function 'gets()' (no buffer bounds checking, removed in C11).
+      Suggested   : Replace 'gets()' immediately with 'fgets()' specifying buffer size.
+
+  [2] static/app.js (Line 1) - [LOW] Best Practice
+      Description : Use of legacy 'var' declaration.
+      Suggested   : Replace 'var' with block-scoped 'let' or 'const'.
+
+  [3] static/app.js (Line 2) - [HIGH] XSS Vulnerability
+      Description : Direct assignment to '.innerHTML' detected (Cross-Site Scripting hazard).
+      Suggested   : Use '.textContent' or sanitize markup with DOMPurify before inserting.
+
+  [4] static/style.css (Line 1) - [LOW] Maintainability Smell
+      Description : Use of '!important' declaration breaks CSS specificity cascade.
+      Suggested   : Refactor selector specificity instead of forcing precedence with '!important'.
+
+  [5] templates/page.html (Line 2) - [MEDIUM] CSP & Maintenance Smell
+      Description : Inline JavaScript event handler detected in HTML markup.
+      Suggested   : Attach event listeners unobtrusively using JavaScript 'addEventListener()'.
+
+  [6] templates/page.html (Line 2) - [LOW] Accessibility (a11y)
+      Description : Image tag missing 'alt' attribute.
+      Suggested   : Provide descriptive 'alt' attribute text for screen readers and SEO.
+
+5. ACTIONABLE RECOMMENDATIONS
+--------------------------------------------------------------------------------
+  (1) Fix critical syntax error in 'native/buffer.c' at line 4 before attempting build or release.
+  (2) Remediate security issue 'Direct assignment to '.innerHTML' detected (Cross-Site Scripting hazard).' in 'static/app.js' (line 2).
+  (3) Replace unsafe function 'Use of dangerous function 'gets()' (no buffer bounds checking, removed in C11).' in 'native/buffer.c' with bounded functions (fgets / snprintf).
+  (4) Current automated test completion is 60.0%. Run additional unit tests to raise coverage to at least 85%.
+  (5) Overall code quality is Poor; conduct peer code reviews to pay down technical debt.
+
+================================================================================
+Report generated automatically by Software Release Risk Scoring System
+Static Code Analysis & Release Quality Assessment Engine
+================================================================================

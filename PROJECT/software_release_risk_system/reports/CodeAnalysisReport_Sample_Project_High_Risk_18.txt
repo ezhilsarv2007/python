@@ -1,0 +1,84 @@
+================================================================================
+           STATIC CODE ANALYSIS & RELEASE RISK ASSESSMENT REPORT
+================================================================================
+Project Name        : Sample Project High Risk
+Upload Type         : Complete Project (ZIP Archive)
+Source Filename     : sample_project_high_risk.zip
+Assessment Timestamp: 2026-11-16 20:44:12
+Analysis ID         : #18
+--------------------------------------------------------------------------------
+
+1. EXECUTIVE SUMMARY & RISK CLASSIFICATION
+--------------------------------------------------------------------------------
+  Overall Release Risk Score : 65.0 / 100
+  Risk Category              : HIGH RISK
+  Overall Code Quality       : Poor
+--------------------------------------------------------------------------------
+
+2. ANALYSIS SUMMARY METRICS
+--------------------------------------------------------------------------------
+  - Total Files Uploaded     : 4
+  - Total Files Analysed     : 4
+  - Total Errors Detected    : 5
+  - Total Warnings           : 2
+  - Critical Issues (Blockers): 2
+  - Security Findings        : 3
+
+3. PARAMETER RISK BREAKDOWN
+--------------------------------------------------------------------------------
+Parameter                | Raw Value       | Sub-Score    | Weight   | Contribution
+--------------------------------------------------------------------------------
+Critical Blockers        | 2 blockers      | 145.50       | 20%      | 29.10
+Security Issues          | 3 issues        | 100.00       | 20%      | 20.00
+Test Completion          | 80.0%           | 20.00        | 15%      | 3.00
+Unresolved Bugs          | 1 bugs          | 6.00         | 15%      | 0.90
+Modified Files           | 4 files         | 10.00        | 10%      | 1.00
+Performance Status       | Average         | 50.00        | 8%       | 4.00
+Code Quality             | Poor            | 100.00       | 7%       | 7.00
+Documentation            | Complete        | 0.00         | 5%       | 0.00
+--------------------------------------------------------------------------------
+TOTAL RISK SCORE                                                | 65.00 / 100
+
+4. DETECTED ISSUES & CORRECTION GUIDELINES
+--------------------------------------------------------------------------------
+  [1] src/core/broken_auth.py (Line 2) - [CRITICAL] Syntax Error
+      Description : Syntax error: '(' was never closed
+      Suggested   : Correct the syntax error near line 2. Ensure brackets, quotes, and colons are properly matched.
+
+  [2] src/core/payment.py (Line 6) - [HIGH] Undefined Variable
+      Description : Undefined variable or symbol 'undefined_shipping_rate'.
+      Suggested   : Define or import 'undefined_shipping_rate' before accessing it to prevent runtime NameError.
+
+  [3] src/core/payment.py (Line 5) - [LOW] Unused Variable
+      Description : Local variable 'api_key' is assigned but never used.
+      Suggested   : Remove unused variable or prefix with an underscore if required by convention.
+
+  [4] src/core/payment.py (Line 2) - [LOW] Unused Import
+      Description : Imported module or symbol 'os' is unused.
+      Suggested   : Remove 'import os' to declutter namespace and optimize startup.
+
+  [5] src/core/payment.py (Line 5) - [HIGH] Hardcoded Credential
+      Description : Potentially hardcoded secret found in variable 'api_key'.
+      Suggested   : Store secrets in environment variables or an external key vault.
+
+  [6] src/native/input_handler.c (Line 6) - [CRITICAL] Critical Buffer Overflow
+      Description : Use of dangerous function 'gets()' (no buffer bounds checking, removed in C11).
+      Suggested   : Replace 'gets()' immediately with 'fgets()' specifying buffer size.
+
+  [7] static/admin.js (Line 3) - [HIGH] XSS Vulnerability
+      Description : Direct assignment to '.innerHTML' detected (Cross-Site Scripting hazard).
+      Suggested   : Use '.textContent' or sanitize markup with DOMPurify before inserting.
+
+5. ACTIONABLE RECOMMENDATIONS
+--------------------------------------------------------------------------------
+  (1) Fix critical syntax error in 'src/core/broken_auth.py' at line 2 before attempting build or release.
+  (2) Resolve undefined variable reference in 'src/core/payment.py' (line 6) to prevent runtime crashes.
+  (3) Remediate security issue 'Direct assignment to '.innerHTML' detected (Cross-Site Scripting hazard).' in 'static/admin.js' (line 3).
+  (4) Replace unsafe function 'Use of dangerous function 'gets()' (no buffer bounds checking, removed in C11).' in 'src/native/input_handler.c' with bounded functions (fgets / snprintf).
+  (5) Clean up 2 unused import/variable declaration(s) across analysed files to improve maintainability.
+  (6) Overall code quality is Poor; conduct peer code reviews to pay down technical debt.
+
+================================================================================
+Report generated automatically by Software Release Risk Scoring System
+Static Code Analysis & Release Quality Assessment Engine
+================================================================================

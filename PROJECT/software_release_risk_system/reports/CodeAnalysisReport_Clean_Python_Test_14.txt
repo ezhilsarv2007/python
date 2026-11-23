@@ -1,0 +1,54 @@
+================================================================================
+           STATIC CODE ANALYSIS & RELEASE RISK ASSESSMENT REPORT
+================================================================================
+Project Name        : Clean Python Test
+Upload Type         : Individual Code File
+Source Filename     : math_utils.py
+Assessment Timestamp: 2026-11-16 20:42:27
+Analysis ID         : #14
+--------------------------------------------------------------------------------
+
+1. EXECUTIVE SUMMARY & RISK CLASSIFICATION
+--------------------------------------------------------------------------------
+  Overall Release Risk Score : 1.0 / 100
+  Risk Category              : LOW RISK
+  Overall Code Quality       : Good
+--------------------------------------------------------------------------------
+
+2. ANALYSIS SUMMARY METRICS
+--------------------------------------------------------------------------------
+  - Total Files Uploaded     : 1
+  - Total Files Analysed     : 1
+  - Total Errors Detected    : 0
+  - Total Warnings           : 0
+  - Critical Issues (Blockers): 0
+  - Security Findings        : 0
+
+3. PARAMETER RISK BREAKDOWN
+--------------------------------------------------------------------------------
+Parameter                | Raw Value       | Sub-Score    | Weight   | Contribution
+--------------------------------------------------------------------------------
+Critical Blockers        | 0 blockers      | 0.00         | 20%      | 0.00
+Security Issues          | 0 issues        | 0.00         | 20%      | 0.00
+Test Completion          | 95.0%           | 5.00         | 15%      | 0.75
+Unresolved Bugs          | 0 bugs          | 0.00         | 15%      | 0.00
+Modified Files           | 1 files         | 2.50         | 10%      | 0.25
+Performance Status       | Good            | 0.00         | 8%       | 0.00
+Code Quality             | Good            | 0.00         | 7%       | 0.00
+Documentation            | Complete        | 0.00         | 5%       | 0.00
+--------------------------------------------------------------------------------
+TOTAL RISK SCORE                                                | 1.00 / 100
+
+4. DETECTED ISSUES & CORRECTION GUIDELINES
+--------------------------------------------------------------------------------
+  [OK] No issues detected. All scanned source code conforms to quality standards.
+5. ACTIONABLE RECOMMENDATIONS
+--------------------------------------------------------------------------------
+  (1) All static code quality and security checks passed with zero errors.
+  (2) Release can proceed after final staging smoke tests.
+  (3) Maintain ongoing test suite execution and version control monitoring.
+
+================================================================================
+Report generated automatically by Software Release Risk Scoring System
+Static Code Analysis & Release Quality Assessment Engine
+================================================================================

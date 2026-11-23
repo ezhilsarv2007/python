@@ -1,0 +1,147 @@
+{% extends "base.html" %}
+
+{% block title %}Release Risk Assessment Form - SRRSS{% endblock %}
+
+{% block content %}
+<div class="container form-container">
+    <div class="page-header">
+        <h1 class="page-title">Software Release Risk Assessment</h1>
+        <p class="page-subtitle">Provide software quality metrics to calculate the release risk score and determine deployment readiness.</p>
+    </div>
+
+    <!-- Quick Test Scenarios Bar -->
+    <div class="scenario-box">
+        <span class="scenario-label">Quick Scenario Fill (For Demonstration &amp; Testing):</span>
+        <div class="scenario-buttons">
+            <a href="{{ url_for('assessment_form', scenario='low') }}" class="btn-scenario btn-scenario-low">Scenario 1: Low Risk</a>
+            <a href="{{ url_for('assessment_form', scenario='medium') }}" class="btn-scenario btn-scenario-med">Scenario 2: Medium Risk</a>
+            <a href="{{ url_for('assessment_form', scenario='high') }}" class="btn-scenario btn-scenario-high">Scenario 3: High Risk</a>
+        </div>
+    </div>
+
+    <!-- Validation Errors Display -->
+    {% if errors %}
+    <div class="alert alert-error">
+        <h4>Please correct the following errors:</h4>
+        <ul>
+            {% for error in errors %}
+                <li>{{ error }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+
+    <div class="card form-card">
+        <form action="{{ url_for('assess') }}" method="POST" id="assessmentForm" novalidate>
+            <!-- Section 1: Project Metadata -->
+            <fieldset class="form-section">
+                <legend class="section-legend">1. Project &amp; Release Metadata</legend>
+                <div class="form-row">
+                    <div class="form-group col-md-8">
+                        <label for="project_name">Software / Project Name <span class="required">*</span></label>
+                        <input type="text" id="project_name" name="project_name" 
+                               value="{{ form_data.get('project_name', '') }}" 
+                               placeholder="e.g., E-Commerce Checkout Service" required>
+                        <small class="field-hint">The title of the application or microservice being released.</small>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label for="version">Software Version <span class="required">*</span></label>
+                        <input type="text" id="version" name="version" 
+                               value="{{ form_data.get('version', '') }}" 
+                               placeholder="e.g., v1.4.0 or v2.0.1" required>
+                        <small class="field-hint">Release build tag or semantic version.</small>
+                    </div>
+                </div>
+            </fieldset>
+
+            <!-- Section 2: Defect & Churn Parameters -->
+            <fieldset class="form-section">
+                <legend class="section-legend">2. Defect &amp; Code Metrics</legend>
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label for="unresolved_bugs">Number of Unresolved Bugs <span class="required">*</span></label>
+                        <input type="number" id="unresolved_bugs" name="unresolved_bugs" min="0" step="1"
+                               value="{{ form_data.get('unresolved_bugs', '') }}" 
+                               placeholder="e.g., 2" required>
+                        <small class="field-hint">Open defects of low/medium severity (non-negative integer).</small>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="critical_blockers">Number of Critical Blockers <span class="required">*</span></label>
+                        <input type="number" id="critical_blockers" name="critical_blockers" min="0" step="1"
+                               value="{{ form_data.get('critical_blockers', '') }}" 
+                               placeholder="e.g., 0" required>
+                        <small class="field-hint">Severity-1 bugs that break critical functionality (high weight).</small>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label for="modified_files">Number of Modified Code Files <span class="required">*</span></label>
+                        <input type="number" id="modified_files" name="modified_files" min="0" step="1"
+                               value="{{ form_data.get('modified_files', '') }}" 
+                               placeholder="e.g., 12" required>
+                        <small class="field-hint">Count of changed source files in this release (code churn).</small>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="security_issues">Number of Security Issues <span class="required">*</span></label>
+                        <input type="number" id="security_issues" name="security_issues" min="0" step="1"
+                               value="{{ form_data.get('security_issues', '') }}" 
+                               placeholder="e.g., 0" required>
+                        <small class="field-hint">Vulnerabilities reported by static analysis or security testing.</small>
+                    </div>
+                </div>
+            </fieldset>
+
+            <!-- Section 3: Testing & Quality Metrics -->
+            <fieldset class="form-section">
+                <legend class="section-legend">3. Testing &amp; Quality Parameters</legend>
+                <div class="form-row">
+                    <div class="form-group col-md-12">
+                        <label for="test_completion">Test Completion Percentage (%) <span class="required">*</span></label>
+                        <input type="number" id="test_completion" name="test_completion" min="0" max="100" step="0.1"
+                               value="{{ form_data.get('test_completion', '') }}" 
+                               placeholder="e.g., 92.5" required>
+                        <small class="field-hint">Percentage of executed and passing test cases (0.0 to 100.0).</small>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group col-md-4">
+                        <label for="performance_status">Performance Status <span class="required">*</span></label>
+                        <select id="performance_status" name="performance_status" required>
+                            <option value="Good" {% if form_data.get('performance_status') == 'Good' or not form_data.get('performance_status') %}selected{% endif %}>Good (Response latency within SLA)</option>
+                            <option value="Average" {% if form_data.get('performance_status') == 'Average' %}selected{% endif %}>Average (Minor latency under load)</option>
+                            <option value="Poor" {% if form_data.get('performance_status') == 'Poor' %}selected{% endif %}>Poor (Severe degradation / bottlenecks)</option>
+                        </select>
+                        <small class="field-hint">Benchmark load &amp; response latency results.</small>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label for="code_quality">Code Quality <span class="required">*</span></label>
+                        <select id="code_quality" name="code_quality" required>
+                            <option value="Good" {% if form_data.get('code_quality') == 'Good' or not form_data.get('code_quality') %}selected{% endif %}>Good (Clean, passes linter &amp; style checks)</option>
+                            <option value="Average" {% if form_data.get('code_quality') == 'Average' %}selected{% endif %}>Average (Minor technical debt)</option>
+                            <option value="Poor" {% if form_data.get('code_quality') == 'Poor' %}selected{% endif %}>Poor (High complexity, technical debt)</option>
+                        </select>
+                        <small class="field-hint">Static code analysis and maintainability index.</small>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label for="documentation_status">Documentation Status <span class="required">*</span></label>
+                        <select id="documentation_status" name="documentation_status" required>
+                            <option value="Complete" {% if form_data.get('documentation_status') == 'Complete' or not form_data.get('documentation_status') %}selected{% endif %}>Complete (Release notes &amp; runbooks ready)</option>
+                            <option value="Incomplete" {% if form_data.get('documentation_status') == 'Incomplete' %}selected{% endif %}>Incomplete (Missing guides or notes)</option>
+                        </select>
+                        <small class="field-hint">Readiness of release notes and deployment guide.</small>
+                    </div>
+                </div>
+            </fieldset>
+
+            <!-- Action Buttons -->
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary btn-lg">Calculate Risk Score</button>
+                <a href="{{ url_for('assessment_form') }}" class="btn btn-outline">Reset Form</a>
+                <a href="{{ url_for('index') }}" class="btn btn-secondary">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

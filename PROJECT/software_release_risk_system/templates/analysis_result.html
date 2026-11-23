@@ -1,0 +1,225 @@
+{% extends "base.html" %}
+
+{% block title %}Analysis Results - {{ analysis.project_name }} - SRRSS{% endblock %}
+
+{% block content %}
+<div class="container result-container">
+    <!-- Header Summary Card -->
+    <div class="card result-header-card">
+        <div class="header-left">
+            <span class="tag">Static Code Analysis &amp; Risk Dashboard</span>
+            <h1 class="project-title">{{ analysis.project_name }}</h1>
+            <p class="project-meta">
+                <strong>Upload Mode:</strong> {{ 'ZIP Project Archive' if analysis.upload_type == 'zip_project' else 'Individual Code File' }} &nbsp;|&nbsp; 
+                <strong>Source:</strong> <code>{{ analysis.original_filename }}</code> &nbsp;|&nbsp;
+                <strong>Assessed:</strong> {{ analysis.timestamp }} &nbsp;|&nbsp;
+                <strong>ID:</strong> #{{ analysis.id }}
+            </p>
+        </div>
+        <div class="header-actions">
+            {% if report_filename %}
+            <a href="{{ url_for('download_report', filename=report_filename) }}" class="btn btn-download">
+                &#128190; Download Report (.txt)
+            </a>
+            {% endif %}
+            <a href="{{ url_for('upload_page') }}" class="btn btn-outline">Upload Another</a>
+        </div>
+    </div>
+
+    <!-- Summary Metrics Cards Grid -->
+    <div class="analysis-summary-grid">
+        <div class="stat-card">
+            <div class="stat-value">{{ summary.files_analysed if summary.files_analysed is defined else analysis.files_analysed }}</div>
+            <div class="stat-label">Files Analysed</div>
+        </div>
+        <div class="stat-card stat-errors">
+            <div class="stat-value">{{ summary.total_errors if summary.total_errors is defined else analysis.total_errors }}</div>
+            <div class="stat-label">Total Errors</div>
+        </div>
+        <div class="stat-card stat-warnings">
+            <div class="stat-value">{{ summary.total_warnings if summary.total_warnings is defined else analysis.total_warnings }}</div>
+            <div class="stat-label">Total Warnings</div>
+        </div>
+        <div class="stat-card stat-critical">
+            <div class="stat-value">{{ summary.critical_issues if summary.critical_issues is defined else analysis.critical_issues }}</div>
+            <div class="stat-label">Critical Issues</div>
+        </div>
+        <div class="stat-card stat-security">
+            <div class="stat-value">{{ summary.security_findings if summary.security_findings is defined else analysis.security_findings }}</div>
+            <div class="stat-label">Security Findings</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value">{{ summary.code_quality_status if summary.code_quality_status is defined else analysis.code_quality_status }}</div>
+            <div class="stat-label">Code Quality</div>
+        </div>
+    </div>
+
+    <!-- Overall Risk Gauge & Score Card -->
+    <div class="card score-overview-card mt-3">
+        <div class="score-grid">
+            <div class="score-block">
+                <span class="score-label">OVERALL RELEASE RISK SCORE</span>
+                <div class="score-number-wrapper">
+                    <span class="score-big {{ badge_class }}-text">{{ "%.2f"|format(analysis.risk_score) }}</span>
+                    <span class="score-denom">/ 100</span>
+                </div>
+                <div class="score-classification">
+                    <span class="badge {{ badge_class }}">{{ analysis.risk_category }}</span>
+                </div>
+            </div>
+
+            <div class="meter-block">
+                <span class="meter-title">Pre-Release Risk Spectrum (Deterministic Weighted Evaluation)</span>
+                <div class="progress-bar-container">
+                    <div class="progress-bar-fill {{ badge_class }}-bg" style="width: {{ analysis.risk_score }}%;"></div>
+                </div>
+
+                <div class="threshold-markers">
+                    <div class="marker-item marker-low">
+                        <span class="dot dot-low"></span>
+                        <span class="label">Low Risk (0 - 30)</span>
+                    </div>
+                    <div class="marker-item marker-med">
+                        <span class="dot dot-med"></span>
+                        <span class="label">Medium Risk (31 - 60)</span>
+                    </div>
+                    <div class="marker-item marker-high">
+                        <span class="dot dot-high"></span>
+                        <span class="label">High Risk (61 - 100)</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recommendations Section (Dynamic) -->
+    <div class="card mt-4">
+        <h2 class="card-title">&#10004; Targeted Release Recommendations</h2>
+        <p class="text-muted">Dynamic guidance generated directly from static analysis findings and risk classification:</p>
+        <div class="recommendations-box rec-{{ badge_class }} mt-2">
+            <ol class="styled-numbered-list">
+                {% for rec in recommendations %}
+                    <li>{{ rec }}</li>
+                {% endfor %}
+            </ol>
+        </div>
+    </div>
+
+    <!-- File-Wise Analysis Section -->
+    <div class="card mt-4">
+        <div class="d-flex justify-between align-center mb-2">
+            <div>
+                <h2 class="card-title" style="margin-bottom: 0;">&#128196; File-Wise Code Inspection Results</h2>
+                <p class="text-muted" style="margin-top: 4px;">Click any file below to expand and inspect its detected line-by-line issues:</p>
+            </div>
+            <div>
+                <button type="button" class="btn btn-sm btn-outline" onclick="toggleAllFiles()">Expand / Collapse All</button>
+            </div>
+        </div>
+
+        {% if grouped_issues and grouped_issues|length > 0 %}
+            <div class="file-accordion-list">
+                {% for filename, file_issue_list in grouped_issues.items() %}
+                <div class="file-accordion-item">
+                    <button type="button" class="file-accordion-header" onclick="toggleFileSection(this)">
+                        <div class="file-header-title">
+                            <span class="file-icon">&#128196;</span>
+                            <strong class="file-name">{{ filename }}</strong>
+                        </div>
+                        <div class="file-header-badges">
+                            <span class="badge-count">{{ file_issue_list|length }} issue(s)</span>
+                            <span class="accordion-arrow">&#9662;</span>
+                        </div>
+                    </button>
+                    <div class="file-accordion-body">
+                        <div class="table-responsive">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 80px;">Line</th>
+                                        <th style="width: 100px;">Severity</th>
+                                        <th style="width: 170px;">Issue Type</th>
+                                        <th>Description</th>
+                                        <th>Suggested Correction</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for item in file_issue_list %}
+                                    <tr>
+                                        <td><code>L{{ item.line_number }}</code></td>
+                                        <td>
+                                            <span class="sev-tag sev-{{ item.severity|lower }}">
+                                                {{ item.severity }}
+                                            </span>
+                                        </td>
+                                        <td><strong>{{ item.issue_type }}</strong></td>
+                                        <td>{{ item.description }}</td>
+                                        <td class="fix-cell">
+                                            <span class="fix-tip">{{ item.suggested_fix }}</span>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="empty-state">
+                <div class="empty-icon">&#9989;</div>
+                <h3>Clean Codebase!</h3>
+                <p class="text-muted">No defects, syntax errors, or security vulnerabilities were detected across the analysed source files.</p>
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Parameter Contributions Breakdown Table -->
+    <div class="card mt-4">
+        <h2 class="card-title">&#128202; Risk Parameter Contribution Breakdown</h2>
+        <p class="text-muted">Mathematical weights applied to translate code analysis metrics into the 100-point release risk scale:</p>
+        <div class="table-responsive mt-2">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Quality Parameter</th>
+                        <th>Observed Metric</th>
+                        <th>Sub-Score (0–100)</th>
+                        <th>Weight</th>
+                        <th>Risk Contribution</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in breakdown %}
+                    <tr>
+                        <td><strong>{{ item.name }}</strong></td>
+                        <td>{{ item.raw_value }}</td>
+                        <td>{{ item.sub_score }}</td>
+                        <td>{{ item.weight }}</td>
+                        <td><strong>{{ item.weighted_score }}</strong> pts</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+                <tfoot>
+                    <tr class="table-total-row">
+                        <td colspan="4" class="text-right"><strong>Total Weighted Risk Score:</strong></td>
+                        <td><strong class="{{ badge_class }}-text">{{ "%.2f"|format(analysis.risk_score) }} / 100</strong></td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+
+    <!-- Bottom Actions -->
+    <div class="bottom-actions mt-4 text-center">
+        {% if report_filename %}
+        <a href="{{ url_for('download_report', filename=report_filename) }}" class="btn btn-download btn-lg">
+            &#128190; Download Complete Report (.txt)
+        </a>
+        {% endif %}
+        <a href="{{ url_for('upload_page') }}" class="btn btn-primary btn-lg">Upload Another Project</a>
+        <a href="{{ url_for('history') }}" class="btn btn-outline btn-lg">View Analysis History</a>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,55 @@
+================================================================================
+               SOFTWARE RELEASE RISK ASSESSMENT REPORT
+================================================================================
+Project Title       : Manual Verification Project
+Software Version    : v2.0.0
+Assessment Timestamp: 2026-11-16 20:42:28
+Assessment ID       : 13
+--------------------------------------------------------------------------------
+
+1. EXECUTIVE SUMMARY
+--------------------------------------------------------------------------------
+  Overall Risk Score : 3.65 / 100
+  Risk Category      : LOW RISK
+--------------------------------------------------------------------------------
+
+2. INPUT PARAMETERS COLLECTED
+--------------------------------------------------------------------------------
+  - Unresolved Bugs          : 2
+  - Critical Blockers        : 0
+  - Modified Code Files      : 5
+  - Test Completion          : 96.0%
+  - Security Issues          : 0
+  - Performance Status       : Good
+  - Code Quality             : Good
+  - Documentation Status     : Complete
+
+3. INDIVIDUAL PARAMETER RISK BREAKDOWN
+--------------------------------------------------------------------------------
+Parameter                | Raw Value       | Sub-Score (0-100)  | Weight   | Contribution
+--------------------------------------------------------------------------------
+Critical Blockers        | 0 blockers      | 0.00               | 20%      | 0.00
+Security Issues          | 0 issues        | 0.00               | 20%      | 0.00
+Test Completion          | 96.0%           | 4.00               | 15%      | 0.60
+Unresolved Bugs          | 2 bugs          | 12.00              | 15%      | 1.80
+Modified Files           | 5 files         | 12.50              | 10%      | 1.25
+Performance Status       | Good            | 0.00               | 8%       | 0.00
+Code Quality             | Good            | 0.00               | 7%       | 0.00
+Documentation            | Complete        | 0.00               | 5%       | 0.00
+--------------------------------------------------------------------------------
+TOTAL WEIGHTED RISK SCORE                                             | 3.65 / 100
+
+4. IDENTIFIED RISK FACTORS & ISSUES
+--------------------------------------------------------------------------------
+  [1] No critical issues detected. All software quality parameters are within safe thresholds.
+
+5. ACTIONABLE RECOMMENDATIONS
+--------------------------------------------------------------------------------
+  (1) Release can proceed after final verification.
+  (2) Maintain regular monitoring post-deployment.
+  (3) Keep testing and documentation updated.
+
+================================================================================
+Report generated automatically by Software Release Risk Scoring System
+College Project - B.Tech / BE Academic Implementation
+================================================================================

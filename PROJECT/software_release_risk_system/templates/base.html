@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Software Release Risk Scoring System{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <!-- Chart.js CDN for visual risk representation -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <!-- Top Navigation Bar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="{{ url_for('index') }}" class="nav-brand">
+                <span class="brand-badge">SRRSS</span>
+                <span class="brand-text">Software Release Risk Scoring System</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="{{ url_for('index') }}" class="nav-link {% if request.path == '/' %}active{% endif %}">Home</a></li>
+                <li><a href="{{ url_for('upload_page') }}" class="nav-link {% if request.path == '/upload' or '/analysis-result' in request.path %}active{% endif %}">Upload Code</a></li>
+                <li><a href="{{ url_for('assessment_form') }}" class="nav-link {% if request.path == '/assessment' or '/result/' in request.path %}active{% endif %}">Risk Assessment</a></li>
+                <li><a href="{{ url_for('history') }}" class="nav-link {% if request.path == '/history' %}active{% endif %}">Analysis History</a></li>
+                <li><a href="{{ url_for('about') }}" class="nav-link {% if request.path == '/about' %}active{% endif %}">About Project</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Flash Messages -->
+    <div class="container message-container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </div>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Simple Student Project Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <p><strong>Software Release Risk Scoring System</strong> – A Python-Based Approach for Assessing Software Release Risks</p>
+            <p class="footer-sub">B.Tech / BE Academic Engineering Project | Powered by Python AST, Pyflakes, Bandit &amp; Flask</p>
+        </div>
+    </footer>
+
+    <!-- Custom Script -->
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>

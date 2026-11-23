@@ -1,0 +1,61 @@
+================================================================================
+               SOFTWARE RELEASE RISK ASSESSMENT REPORT
+================================================================================
+Project Title       : Customer Billing Portal
+Software Version    : v2.1.0
+Assessment Timestamp: 2026-11-16 12:59:14
+Assessment ID       : 7
+--------------------------------------------------------------------------------
+
+1. EXECUTIVE SUMMARY
+--------------------------------------------------------------------------------
+  Overall Risk Score : 34.8 / 100
+  Risk Category      : MEDIUM RISK
+--------------------------------------------------------------------------------
+
+2. INPUT PARAMETERS COLLECTED
+--------------------------------------------------------------------------------
+  - Unresolved Bugs          : 10
+  - Critical Blockers        : 0
+  - Modified Code Files      : 22
+  - Test Completion          : 68.0%
+  - Security Issues          : 1
+  - Performance Status       : Average
+  - Code Quality             : Average
+  - Documentation Status     : Complete
+
+3. INDIVIDUAL PARAMETER RISK BREAKDOWN
+--------------------------------------------------------------------------------
+Parameter                | Raw Value       | Sub-Score (0-100)  | Weight   | Contribution
+--------------------------------------------------------------------------------
+Critical Blockers        | 0 blockers      | 0.00               | 20%      | 0.00
+Security Issues          | 1 issues        | 40.00              | 20%      | 8.00
+Test Completion          | 68.0%           | 32.00              | 15%      | 4.80
+Unresolved Bugs          | 10 bugs         | 60.00              | 15%      | 9.00
+Modified Files           | 22 files        | 55.00              | 10%      | 5.50
+Performance Status       | Average         | 50.00              | 8%       | 4.00
+Code Quality             | Average         | 50.00              | 7%       | 3.50
+Documentation            | Complete        | 0.00               | 5%       | 0.00
+--------------------------------------------------------------------------------
+TOTAL WEIGHTED RISK SCORE                                             | 34.80 / 100
+
+4. IDENTIFIED RISK FACTORS & ISSUES
+--------------------------------------------------------------------------------
+  [1] 1 Security Issue(s) detected requiring security team audit.
+  [2] Test completion is low (68.0%), below the recommended threshold of 80%.
+  [3] High number of unresolved bugs (10 bugs) affecting release stability.
+  [4] Significant code churn detected with 22 modified source files.
+  [5] Performance is Average; load benchmarks should be verified.
+  [6] Code Quality is Average; code review sign-off recommended.
+
+5. ACTIONABLE RECOMMENDATIONS
+--------------------------------------------------------------------------------
+  (1) Resolve pending bugs before pushing to production.
+  (2) Complete remaining testing to increase coverage above 85%.
+  (3) Review modified code files to prevent regression side effects.
+  (4) Verify security issues before deployment sign-off.
+
+================================================================================
+Report generated automatically by Software Release Risk Scoring System
+College Project - B.Tech / BE Academic Implementation
+================================================================================

@@ -1,0 +1,137 @@
+{% extends "base.html" %}
+
+{% block title %}Upload &amp; Analyse Code - SRRSS{% endblock %}
+
+{% block content %}
+<div class="container form-container">
+    <div class="page-header">
+        <h1 class="page-title">Source Code Release Risk Analysis</h1>
+        <p class="page-subtitle">
+            Upload your complete project archive (ZIP) or individual source files for automated static code analysis, 
+            defect detection, and deployment risk scoring.
+        </p>
+    </div>
+
+    <!-- Quick Download Ready-to-Test Sample Projects Box -->
+    <div class="scenario-box mb-4">
+        <div>
+            <span class="scenario-label">&#128230; Need a Sample ZIP Project to Test?</span>
+            <p class="text-muted" style="font-size: 0.85rem; margin-top: 2px;">
+                Download any pre-built sample project below, then upload it into Option 1:
+            </p>
+        </div>
+        <div class="scenario-buttons">
+            <a href="{{ url_for('download_sample', filename='sample_project_clean_low_risk.zip') }}" class="btn-scenario btn-scenario-low">
+                &#11015; Sample Clean (Low Risk)
+            </a>
+            <a href="{{ url_for('download_sample', filename='sample_project_medium_risk.zip') }}" class="btn-scenario btn-scenario-med">
+                &#11015; Sample Smells (Medium Risk)
+            </a>
+            <a href="{{ url_for('download_sample', filename='sample_project_high_risk.zip') }}" class="btn-scenario btn-scenario-high">
+                &#11015; Sample Critical (High Risk)
+            </a>
+        </div>
+    </div>
+
+    <!-- Upload Options Selection Tabs -->
+    <div class="upload-mode-selector">
+        <button type="button" class="mode-tab active" id="tabZip" onclick="switchUploadMode('zip_project')">
+            &#128193; Option 1: Upload Complete Project (ZIP)
+        </button>
+        <button type="button" class="mode-tab" id="tabSingle" onclick="switchUploadMode('single_file')">
+            &#128196; Option 2: Upload Individual Code File
+        </button>
+    </div>
+
+    <div class="card form-card mt-3">
+        <form action="{{ url_for('analyze_upload') }}" method="POST" enctype="multipart/form-data" id="uploadForm">
+            <!-- Hidden field toggled by tab switcher -->
+            <input type="hidden" name="upload_type" id="upload_type" value="zip_project">
+
+            <!-- Informational Banner for Current Mode -->
+            <div class="mode-info-banner" id="modeInfoBanner">
+                <div id="zipInfo">
+                    <h3>Option 1: Complete Project ZIP Archive Analysis</h3>
+                    <p>
+                        Upload your software repository as a <code>.zip</code> file (up to 25 MB). 
+                        The engine extracts the archive safely, excludes non-essential directories (<code>node_modules</code>, <code>.git</code>, <code>__pycache__</code>, virtualenvs), 
+                        and executes static code analysis across all supported source code files.
+                    </p>
+                </div>
+                <div id="singleInfo" style="display: none;">
+                    <h3>Option 2: Individual Source Code File Analysis</h3>
+                    <p>
+                        Upload a single source code file. Supported formats:
+                        <strong>Python (.py)</strong>, <strong>JavaScript (.js)</strong>, <strong>TypeScript (.ts)</strong>, 
+                        <strong>Java (.java)</strong>, <strong>C (.c)</strong>, <strong>C++ (.cpp, .cc, .h)</strong>, 
+                        <strong>HTML (.html)</strong>, and <strong>CSS (.css)</strong>.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Project Metadata Fields -->
+            <fieldset class="form-section">
+                <legend class="section-legend">1. Project Information</legend>
+                <div class="form-row">
+                    <div class="form-group col-md-8">
+                        <label for="project_name">Software / Project Name</label>
+                        <input type="text" id="project_name" name="project_name" 
+                               placeholder="e.g., Enterprise Billing Service (Optional - derived from filename if empty)">
+                        <small class="field-hint">Used for identification in reports and historical assessment logs.</small>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label for="test_completion">Test Completion (%) <span class="text-muted">(Optional)</span></label>
+                        <input type="number" id="test_completion" name="test_completion" 
+                               min="0" max="100" step="0.1" value="80.0" placeholder="e.g., 85.0">
+                        <small class="field-hint">Automated test execution rate (Default: 80.0%).</small>
+                    </div>
+                </div>
+            </fieldset>
+
+            <!-- File Upload Section -->
+            <fieldset class="form-section">
+                <legend class="section-legend">2. Select Source File / Archive</legend>
+                
+                <div class="file-upload-box">
+                    <label for="code_file" class="file-drop-label" id="fileDropLabel">
+                        <div class="upload-icon">&#128229;</div>
+                        <span class="upload-prompt-text" id="uploadPromptText">Click to choose a .zip project archive</span>
+                        <span class="upload-subtext" id="uploadSubtext">Maximum file size: 25 MB</span>
+                    </label>
+                    <input type="file" id="code_file" name="code_file" class="file-input" required 
+                           accept=".zip" onchange="handleFileSelected(this)">
+                </div>
+
+                <div class="file-selected-status" id="fileSelectedStatus" style="display: none;">
+                    <span class="status-icon">&#10004;</span>
+                    <span id="selectedFileName">No file selected</span>
+                    <span id="selectedFileSize" class="text-muted"></span>
+                </div>
+            </fieldset>
+
+            <!-- Supported Formats Badges -->
+            <div class="supported-formats-box">
+                <span class="format-title">Supported Static Analysis Engines:</span>
+                <div class="badge-list">
+                    <span class="badge-ext">Python (.py) - AST &amp; Pyflakes &amp; Bandit</span>
+                    <span class="badge-ext">JavaScript (.js)</span>
+                    <span class="badge-ext">TypeScript (.ts)</span>
+                    <span class="badge-ext">Java (.java)</span>
+                    <span class="badge-ext">C (.c)</span>
+                    <span class="badge-ext">C++ (.cpp, .h)</span>
+                    <span class="badge-ext">HTML (.html)</span>
+                    <span class="badge-ext">CSS (.css)</span>
+                </div>
+            </div>
+
+            <!-- Form Submit Actions -->
+            <div class="form-actions mt-4">
+                <button type="submit" class="btn btn-primary btn-lg" id="submitBtn">
+                    &#128269; Run Static Analysis &amp; Assess Risk
+                </button>
+                <a href="{{ url_for('index') }}" class="btn btn-secondary">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,64 @@
+================================================================================
+               SOFTWARE RELEASE RISK ASSESSMENT REPORT
+================================================================================
+Project Title       : Core Banking Transaction Engine
+Software Version    : v3.0.0-RC1
+Assessment Timestamp: 2026-11-16 09:05:17
+Assessment ID       : 5
+--------------------------------------------------------------------------------
+
+1. EXECUTIVE SUMMARY
+--------------------------------------------------------------------------------
+  Overall Risk Score : 90.75 / 100
+  Risk Category      : HIGH RISK
+--------------------------------------------------------------------------------
+
+2. INPUT PARAMETERS COLLECTED
+--------------------------------------------------------------------------------
+  - Unresolved Bugs          : 24
+  - Critical Blockers        : 2
+  - Modified Code Files      : 45
+  - Test Completion          : 35.0%
+  - Security Issues          : 3
+  - Performance Status       : Poor
+  - Code Quality             : Poor
+  - Documentation Status     : Incomplete
+
+3. INDIVIDUAL PARAMETER RISK BREAKDOWN
+--------------------------------------------------------------------------------
+Parameter                | Raw Value       | Sub-Score (0-100)  | Weight   | Contribution
+--------------------------------------------------------------------------------
+Critical Blockers        | 2 blockers      | 80.00              | 20%      | 16.00
+Security Issues          | 3 issues        | 100.00             | 20%      | 20.00
+Test Completion          | 35.0%           | 65.00              | 15%      | 9.75
+Unresolved Bugs          | 24 bugs         | 100.00             | 15%      | 15.00
+Modified Files           | 45 files        | 100.00             | 10%      | 10.00
+Performance Status       | Poor            | 100.00             | 8%       | 8.00
+Code Quality             | Poor            | 100.00             | 7%       | 7.00
+Documentation            | Incomplete      | 100.00             | 5%       | 5.00
+--------------------------------------------------------------------------------
+TOTAL WEIGHTED RISK SCORE                                             | 90.75 / 100
+
+4. IDENTIFIED RISK FACTORS & ISSUES
+--------------------------------------------------------------------------------
+  [1] 2 Critical Blocker(s) identified that must be resolved prior to release.
+  [2] 3 Security Issue(s) detected requiring security team audit.
+  [3] Test completion is low (35.0%), below the recommended threshold of 80%.
+  [4] High number of unresolved bugs (24 bugs) affecting release stability.
+  [5] Significant code churn detected with 45 modified source files.
+  [6] Performance status is marked as Poor (potential latency or throughput regression).
+  [7] Code Quality is rated as Poor; high technical debt and maintainability risk.
+  [8] Release documentation is Incomplete, risking handover and support issues.
+
+5. ACTIONABLE RECOMMENDATIONS
+--------------------------------------------------------------------------------
+  (1) Avoid immediate deployment; hold current release pipeline.
+  (2) Resolve critical blockers immediately as top priority.
+  (3) Conduct additional regression and stress testing.
+  (4) Fix all identified security vulnerabilities.
+  (5) Review code quality and optimize performance bottlenecks.
+
+================================================================================
+Report generated automatically by Software Release Risk Scoring System
+College Project - B.Tech / BE Academic Implementation
+================================================================================
